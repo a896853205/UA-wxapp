@@ -67,7 +67,7 @@ const Authority = () => {
           });
         }}
       >
-        我要登录
+        患者授权
       </View>
     </View>
   );
