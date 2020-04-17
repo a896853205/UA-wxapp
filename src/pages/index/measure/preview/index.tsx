@@ -12,7 +12,7 @@ import aim from '../../../../assets/icon/aim.png';
 import bar from '../../../../assets/icon/bar.png';
 import clock from '../../../../assets/icon/clock.png';
 import config from '../../../../assets/icon/config.png';
-import newspaper from '../../../../assets/icon/newspaper.png';
+import doctor from '../../../../assets/icon/doctor.png';
 
 interface IMeasure {
   measureType: string;
@@ -91,6 +91,9 @@ const Preview = () => {
             case 3:
               Taro.navigateTo({ url: '/pages/aim/index' });
               break;
+            case 4:
+              Taro.navigateTo({ url: '/pages/doctor/index' });
+              break;
             default:
           }
         }}
@@ -113,8 +116,8 @@ const Preview = () => {
             value: '目标设置',
           },
           {
-            image: newspaper,
-            value: '最新新闻',
+            image: doctor,
+            value: '选择医生',
           },
           {
             image: config,

@@ -1,0 +1,88 @@
+.me-box {
+  background: rgb(245, 245, 245);
+  height: 100vh;
+}
+
+.me-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 0;
+}
+
+.me-list {
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.me-item {
+  border-radius: 10rpx;
+  background: #fff;
+  width: 85%;
+  padding: 30rpx;
+  margin-top: 40rpx;
+  box-sizing: border-box;
+}
+
+.me-profile {
+  display: flex;
+}
+
+.me-describe {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.me-position {
+  color: #999;
+}
+
+.me-head-profile {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin-right: 38rpx;
+}
+
+.me-item:first-child {
+  margin-top: 38rpx;
+  box-shadow: 0 2rpx 12rpx 3rpx rgba(193, 193, 193, 0.16);
+  padding: 45rpx 50rpx;
+  box-sizing: border-box;
+  font-size: 0.8rem;
+}
+
+.me-item:last-child {
+  padding: 0;
+}
+
+.item-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 20rpx;
+}
+
+.item-list {
+  display: flex;
+  justify-content: space-between;
+}
+
+.item-cell {
+  width: 33%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.item-name {
+  margin-top: 15rpx;
+  font-size: 0.8rem;
+}

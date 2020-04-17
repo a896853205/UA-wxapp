@@ -37,6 +37,8 @@ class App extends Component {
       'pages/sync-data/index',
       'pages/save-data/index',
       'pages/save-remind/index',
+      'pages/doctor/index',
+      'pages/doctor-detail/index',
     ],
     window: {
       backgroundTextStyle: 'light',

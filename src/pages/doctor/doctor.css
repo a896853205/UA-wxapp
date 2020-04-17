@@ -1,0 +1,14 @@
+.doctor-box {
+  background: rgb(245, 245, 245);
+  height: 100vh;
+}
+
+.at-list__item--thumb .item-thumb {
+  width: 90rpx !important;
+  height: 90rpx !important;
+}
+
+.current-doctor-box {
+  margin-top: 20rpx;
+  margin-bottom: 20rpx;
+}
