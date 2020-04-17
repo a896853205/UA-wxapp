@@ -44,7 +44,7 @@ const Measure = () => {
   return (
     <View className="index">
       <AtTabBar
-        tabList={[{ title: '尿频单项' }, { title: '三联检测' }]}
+        tabList={[{ title: '尿酸单项' }, { title: '三联检测' }]}
         onClick={(e) => {
           setTabCur(e);
         }}

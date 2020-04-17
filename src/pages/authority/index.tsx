@@ -67,17 +67,7 @@ const Authority = () => {
           });
         }}
       >
-        我是患者
-      </View>
-      <View
-        className="btn secondary"
-        onClick={() => {
-          Taro.redirectTo({
-            url: '../../pages/login/index',
-          });
-        }}
-      >
-        我是医生
+        我要登录
       </View>
     </View>
   );

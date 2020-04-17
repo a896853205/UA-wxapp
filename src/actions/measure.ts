@@ -4,7 +4,7 @@ export const changeMeasureType = (measureType) => {
   let measureText = '';
   switch (measureType) {
     case 'single':
-      measureText = '尿频单项';
+      measureText = '尿酸单项';
       break;
     case 'joint':
       measureText = '三联检测';
