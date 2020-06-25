@@ -39,6 +39,7 @@ class App extends Component {
       'pages/save-remind/index',
       'pages/doctor/index',
       'pages/doctor-detail/index',
+      'pages/register/index',
     ],
     window: {
       backgroundTextStyle: 'light',
