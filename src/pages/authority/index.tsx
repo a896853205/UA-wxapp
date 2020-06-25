@@ -43,6 +43,7 @@ const Authority = () => {
               js_code: resLogin.code,
             },
           });
+          
           if (res.statusCode === 200) {
             // 设置 token
             Taro.setStorageSync('token', res.data.data.token);
@@ -68,8 +69,6 @@ const Authority = () => {
         }
         setLoading(false);
       }
-    } else {
-      Taro.switchTab({ url: '/pages/index/index' });
     }
   };
 
