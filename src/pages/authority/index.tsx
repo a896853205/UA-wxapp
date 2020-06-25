@@ -45,9 +45,9 @@ const Authority = () => {
           });
           if (res.statusCode === 200) {
             // 设置 token
-            Taro.setStorageSync('token', res.data.token);
+            Taro.setStorageSync('token', res.data.data.token);
             // 登录成功返回首页并刷新首页数据
-            if (res.data.registerd) {
+            if (res.data.data.registerd) {
               Taro.reLaunch({ url: '/pages/index/index' });
             } else {
               Taro.reLaunch({ url: '/pages/register/index' });
