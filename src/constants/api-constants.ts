@@ -5,3 +5,5 @@ const DominConfigs = {
 
 export const AUTHORIZE = `${DominConfigs.DOMAIN}/login`;
 export const REGISTER = `${DominConfigs.DOMAIN}/register`;
+export const MEASURE_BASIC = `${DominConfigs.DOMAIN}/measure/basic`;
+export const MEASURE_UPDATE = `${DominConfigs.DOMAIN}/measure/update`;
