@@ -4,3 +4,4 @@ const DominConfigs = {
 };
 
 export const AUTHORIZE = `${DominConfigs.DOMAIN}/login`;
+export const REGISTER = `${DominConfigs.DOMAIN}/register`;
