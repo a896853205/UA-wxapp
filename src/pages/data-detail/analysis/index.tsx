@@ -1,10 +1,15 @@
 // TODO: 上面时间段选择,饼图分析(几次偏高,几次正常),总次数,连续高位次数,最高mmol/L,最长高位天数
 // TODO: 将data-detail的折线组件抽象到这里
-import Taro, { memo, useState } from '@tarojs/taro';
+import Taro, { memo, useState, useEffect } from '@tarojs/taro';
 import { View, Text, Picker } from '@tarojs/components';
-import { AtIcon, AtList, AtListItem } from 'taro-ui';
+import { AtIcon, AtList, AtListItem, AtToast } from 'taro-ui';
 import { useSelector } from '@tarojs/redux';
 import Chart from 'taro-echarts';
+
+import {
+  MEASURE_BASIC,
+} from '../../../constants/api-constants';
+import http from '../../../util/http';
 
 import './analysis.css';
 
@@ -20,12 +25,47 @@ const TIME_RANGE = ['过去一周', '过去一个月'];
 
 const Analysis = () => {
   const [timeSpanIndex, setTimeSpanIndex] = useState(0);
+  const [measureBasicList, setMeasureBasicList] = useState<any>([]);
+  const [getDataLoading, setGetDataLoading] = useState(false);
   const { measureType } = useSelector<IStatus, IMeasure>(
     (state) => state.measure
   );
 
+  useEffect(() => {
+    (async () => {
+      setGetDataLoading(true);
+
+      const res = await http({
+        url: MEASURE_BASIC,
+        method: 'GET',
+        data: {
+          type: measureType === 'single' ? measureType : 'triple',
+          days: timeSpanIndex ? 30 : 7
+        }
+      });
+
+      if (res.statusCode === 500) {
+        Taro.atMessage({
+          message: '获取列表失败',
+          type: 'error',
+        });
+      } else if (res.statusCode === 200) {
+        setMeasureBasicList(res.data.data);
+        console.log(measureBasicList);
+      }
+
+      setGetDataLoading(false);
+    })();
+  }, [timeSpanIndex]);
+
   return (
     <View>
+      <AtToast
+        isOpened={getDataLoading}
+        hasMask
+        status="loading"
+        text="患者健康数据加载中..."
+      />
       {/* FIXME: 多一个自定义时间,点到自定义时间时就多出一个Picker */}
       <Picker
         mode="selector"

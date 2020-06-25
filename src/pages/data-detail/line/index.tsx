@@ -50,7 +50,6 @@ const Line = () => {
         });
       } else if (res.statusCode === 200) {
         setMeasureBasicList(res.data.data);
-        console.log(res.data.data);
         console.log(measureBasicList);
       }
 
