@@ -23,56 +23,51 @@ const Authority = () => {
     });
   }, []);
 
-  const tobegin = (res) => {
+  const tobegin = async (res) => {
     if (res.detail.userInfo) {
       // 返回的信息中包含用户信息则证明用户允许获取信息授权
       console.log('授权成功');
       // 保存用户信息微信登录
       Taro.setStorageSync('userInfo', res.detail.userInfo);
 
-      setLoading(!loading);
-      Taro.login().then((resLogin) => {
-        console.log(resLogin);
+      if (!loading) {
+        setLoading(!loading);
+        const resLogin = await Taro.login();
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
         if (resLogin.code) {
           // 登录
-          http({
+          const res = await http({
             url: AUTHORIZE,
             method: 'POST',
             data: {
               js_code: resLogin.code,
             },
-          }).then(
-            (result) => {
-              console.log(result);
-              if (result.statusCode === 200) {
-                // 设置 token
-                Taro.setStorageSync('token', result.data.token);
-                // 登录成功返回首页并刷新首页数据
-                if (result.data.registerd) {
-                  Taro.reLaunch({ url: '/pages/index/index' });
-                } else {
-                  Taro.reLaunch({ url: '/pages/register/index' });
-                }
-              } else {
-                Taro.showToast({
-                  title: '登录失败，请稍后重试',
-                  icon: 'none',
-                  mask: true,
-                });
-              }
-            },
-            () => {
-              Taro.showToast({
-                title: '登录失败，请稍后重试',
-                icon: 'none',
-                mask: true,
-              });
+          });
+          if (res.statusCode === 200) {
+            // 设置 token
+            Taro.setStorageSync('token', res.data.token);
+            // 登录成功返回首页并刷新首页数据
+            if (res.data.registerd) {
+              Taro.reLaunch({ url: '/pages/index/index' });
+            } else {
+              Taro.reLaunch({ url: '/pages/register/index' });
             }
-          );
+          } else {
+            Taro.showToast({
+              title: '登录失败，请稍后重试',
+              icon: 'none',
+              mask: true,
+            });
+          }
+        } else {
+          Taro.showToast({
+            title: '登录失败，请稍后重试',
+            icon: 'none',
+            mask: true,
+          });
         }
         setLoading(false);
-      });
+      }
     } else {
       Taro.switchTab({ url: '/pages/index/index' });
     }
