@@ -59,7 +59,7 @@
   font-size: 0.8rem;
 }
 
-.me-item:last-child {
+.me-item:last-child[data-type] {
   padding: 0;
 }
 

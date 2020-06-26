@@ -1,9 +1,17 @@
-import Taro, { memo } from '@tarojs/taro';
+import Taro, { memo, useState, useEffect } from '@tarojs/taro';
 import { View, Image, Text } from '@tarojs/components';
-import { AtButton } from 'taro-ui';
+import { AtButton, AtToast, AtMessage } from 'taro-ui';
+import { useDispatch } from '@tarojs/redux';
 
+import { changeSelectedDoctor } from '../../actions/doctor';
 import './doctor-detail.css';
 import meTopBackground from '../../assets/image/me-top-background.png';
+
+import {
+  DOCTOR_DETAIL,
+  DOCTOR_BIND,
+} from '../../constants/api-constants';
+import http from '../../util/http';
 
 type PageStateProps = {};
 
@@ -21,37 +29,119 @@ const Me = () => {
    * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
+
+  const [headPortrait, setHeadPortrait] = useState('');
+  const [totalPatientNumber, setTotalPatientNumber] = useState('');
+  const [name, setName] = useState('');
+  const [skill, setSkill] = useState('');
+  const [intro, setIntro] = useState('');
+  const [selected, setSelected] = useState(false);
+  const [getDataLoading, setGetDataLoading] = useState(false);
+  const doctorUuid = Taro.getStorageSync('viewDoctor');
+  const patientUuid = Taro.getStorageSync('activePatient');
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    (async () => {
+      if (doctorUuid) {
+        setGetDataLoading(true);
+
+        const res = await http({
+          url: DOCTOR_DETAIL,
+          method: 'GET',
+          data: {
+            doctor_uuid: doctorUuid,
+            patient_uuid: patientUuid,
+          },
+        });
+
+        if (res.statusCode === 500) {
+          Taro.atMessage({
+            message: '获取医生详情失败',
+            type: 'error',
+          });
+        } else if (res.statusCode === 200) {
+          setHeadPortrait(res.data.data.avartar);
+          setTotalPatientNumber(res.data.data.total_patient_number);
+          setName(res.data.data.name);
+          setSkill(res.data.data.skill);
+          setIntro(res.data.data.intro);
+          setSelected(res.data.data.selected);
+        }
+
+        setGetDataLoading(false);
+      } else {
+        Taro.atMessage({
+          message: '选择医生失败',
+          type: 'error',
+        });
+      }
+    })();
+  }, [doctorUuid, patientUuid]);
+
+  const handleBind = async () => {
+    const res = await http({
+      url: DOCTOR_BIND,
+      method: 'POST',
+      data: {
+        doctor_uuid: doctorUuid,
+      },
+    });
+
+    if (res.statusCode === 500) {
+      Taro.atMessage({
+        message: '修改绑定医生失败',
+        type: 'error',
+      });
+    } else if (res.statusCode === 200) {
+      dispatch(changeSelectedDoctor(true));
+      if (!selected) {
+        Taro.reLaunch({ url: '/pages/index/index?cur=0' });
+      }
+    }
+  };
+
   return (
     <View className="me-box">
+      <AtToast
+        isOpened={getDataLoading}
+        hasMask
+        status="loading"
+        text="医生详细信息加载中..."
+      />
+      <AtMessage />
       <Image src={meTopBackground} className="me-background" mode="widthFix" />
       <View className="me-list">
         <View className="me-item me-profile">
           <Image
-            src="https://img2.woyaogexing.com/2020/04/14/fa870d305ba64868a585b8ccbd270a5b!400x400.jpeg"
+            src={headPortrait}
             className="me-head-profile"
             mode="widthFix"
           />
           <View className="me-describe">
-            <Text>钱医生</Text>
-            <Text className="me-position">累计服务人数 1000+</Text>
+            <Text>{name}</Text>
+            <Text className="me-position">{`累计服务人数: ${totalPatientNumber}`}</Text>
           </View>
         </View>
         <View className="me-item">
-          <View className="item-title">从事历史</View>
+          <View className="item-title">个人简介</View>
           <View className="item-name">
-            生化制药专业,从事健康管理5年,曾进修于北京糖尿病医院.
+            {intro}
           </View>
         </View>
         <View className="me-item">
           <View className="item-title">擅长方向</View>
           <View className="item-name">
-            熟知糖尿病诊断和预防管理，擅长结合糖尿病饮食计划进行个案调糖管理熟知糖尿病诊断和预防管理，擅长结合糖尿病饮食计划进行个案调糖管理熟知糖尿病诊断和预防管理，擅长结合糖尿病饮食计划进行个案调糖管理
+            {skill}
           </View>
         </View>
-
-        <View className="me-item">
-          <AtButton type="primary">选择该医生</AtButton>
-        </View>
+        {selected ? null : (
+          <View className="me-item">
+            <AtButton type="primary" onClick={handleBind}>
+              选择该医生
+            </AtButton>
+          </View>
+        )}
       </View>
     </View>
   );
