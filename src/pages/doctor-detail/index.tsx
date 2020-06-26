@@ -38,7 +38,6 @@ const Me = () => {
   const [selected, setSelected] = useState(false);
   const [getDataLoading, setGetDataLoading] = useState(false);
   const doctorUuid = Taro.getStorageSync('viewDoctor');
-  const patientUuid = Taro.getStorageSync('activePatient');
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -51,7 +50,6 @@ const Me = () => {
           method: 'GET',
           data: {
             doctor_uuid: doctorUuid,
-            patient_uuid: patientUuid,
           },
         });
 
@@ -77,7 +75,7 @@ const Me = () => {
         });
       }
     })();
-  }, [doctorUuid, patientUuid]);
+  }, [doctorUuid]);
 
   const handleBind = async () => {
     const res = await http({

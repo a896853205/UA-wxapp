@@ -6,7 +6,6 @@ import { changeSelectedDoctor } from '../../actions/doctor';
 
 import './doctor.css';
 
-// import doctorDefault from '../../assets/image/doctor-default.jpg';
 import selected from '../../assets/icon/selected.png';
 
 import http from '../../util/http';
@@ -19,7 +18,7 @@ interface Istatus {
   doctor: Idoctor;
 }
 
-const DOCTOR_LIST_SIZE = 5;
+const DOCTOR_LIST_SIZE = 100;
 
 const Doctor = () => {
   /**
@@ -36,7 +35,6 @@ const Doctor = () => {
   const [activeDoctorLoading, setActiveDoctorLoading] = useState(true);
   const [getDataLoading, setGetDataLoading] = useState(true);
   const [isNeedRefresh, setIsNeedRefresh] = useState(true);
-  const activePatient = Taro.getStorageSync('activePatient');
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -73,9 +71,6 @@ const Doctor = () => {
         const res = await http({
           url: DOCTOR_ACTIVE,
           method: 'GET',
-          data: {
-            uuid: activePatient,
-          },
         });
 
         if (res.statusCode === 500) {
@@ -91,7 +86,7 @@ const Doctor = () => {
         setIsNeedRefresh(false);
       }
     })();
-  }, [activePatient, isNeedRefresh]);
+  }, [isNeedRefresh]);
 
   useEffect(() => {
     if (isChanged) {
