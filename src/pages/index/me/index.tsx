@@ -45,8 +45,6 @@ const Me = () => {
         });
       } else if (res.statusCode === 200) {
         setMe(res.data.data);
-        console.log(res.data.data.headurl ? res.data.data.headurl : '没有');
-
       }
 
       setGetDataLoading(false);
@@ -64,7 +62,11 @@ const Me = () => {
       />
       <Image src={meTopBackground} className="me-background" mode="widthFix" />
       <View className="me-list">
-        <View className="me-item me-profile">
+        <View
+          className="me-item me-profile"
+          onClick={() => {
+            Taro.navigateTo({ url: '/pages/me-update/index' });
+          }}>
           <Image
             src={me.headurl ? me.headurl : patientDefault}
             className="me-head-profile"

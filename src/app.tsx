@@ -30,6 +30,7 @@ class App extends Component {
       'pages/authority/index',
       'pages/index/index',
       'pages/aim/index',
+      'pages/me-update/index',
       'pages/data-detail/index',
       'pages/device/index',
       'pages/news-detail/index',
