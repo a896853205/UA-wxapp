@@ -18,7 +18,7 @@ interface Istatus {
   doctor: Idoctor;
 }
 
-const DOCTOR_LIST_SIZE = 100;
+const DOCTOR_LIST_SIZE = 10;
 
 const Doctor = () => {
   /**
@@ -119,22 +119,24 @@ const Doctor = () => {
       <AtMessage />
       <View className="current-doctor-box">
         <AtCard thumb={selected} title="当前医生选择">
-          <AtList hasBorder={false}>
-            <AtListItem
-              key={activeDoctor.uuid}
-              title={activeDoctor.name}
-              arrow="right"
-              note={`电话: ${activeDoctor.phone}`}
-              thumb={activeDoctor.avartar}
-              extraText="查看详情"
-              onClick={() => {
-                Taro.setStorageSync('viewDoctor', activeDoctor.uuid);
-                Taro.navigateTo({
-                  url: '/pages/doctor-detail/index',
-                });
-              }}
-            />
-          </AtList>
+          {activeDoctor && activeDoctor.uuid ?
+            <AtList hasBorder={false}>
+              <AtListItem
+                key={activeDoctor.uuid}
+                title={activeDoctor.name}
+                arrow="right"
+                note={`电话: ${activeDoctor.phone}`}
+                thumb={activeDoctor.avartar}
+                extraText="查看详情"
+                onClick={() => {
+                  Taro.setStorageSync('viewDoctor', activeDoctor.uuid);
+                  Taro.navigateTo({
+                    url: '/pages/doctor-detail/index',
+                  });
+                }}
+              />
+            </AtList>
+            : null}
         </AtCard>
       </View>
       <AtList>
