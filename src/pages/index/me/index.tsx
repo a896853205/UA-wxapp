@@ -1,9 +1,14 @@
-import Taro, { memo } from '@tarojs/taro';
+import Taro, { memo, useState, useEffect } from '@tarojs/taro';
 import { View, Image, Text } from '@tarojs/components';
-import { AtIcon } from 'taro-ui';
+import { AtIcon, AtMessage, AtToast } from 'taro-ui';
+
+import http from '../../../util/http';
+import { ME } from '../../../constants/api-constants';
 
 import './me.css';
 import meTopBackground from '../../../assets/image/me-top-background.png';
+import patientDefault from '../../../assets/image/patient-default.jpg';
+
 type PageStateProps = {};
 
 type IProps = PageStateProps;
@@ -20,18 +25,53 @@ const Me = () => {
    * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
+
+  const [me, setMe] = useState<any>([]);
+  const [getDataLoading, setGetDataLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      setGetDataLoading(true);
+
+      const res = await http({
+        url: ME,
+        method: 'GET',
+      });
+
+      if (res.statusCode === 500) {
+        Taro.atMessage({
+          message: '获取信息失败',
+          type: 'error',
+        });
+      } else if (res.statusCode === 200) {
+        setMe(res.data.data);
+        console.log(res.data.data.headurl ? res.data.data.headurl : '没有');
+
+      }
+
+      setGetDataLoading(false);
+    })();
+  }, []);
+
   return (
     <View className="me-box">
+      <AtMessage />
+      <AtToast
+        isOpened={getDataLoading}
+        hasMask
+        status="loading"
+        text="个人信息加载中..."
+      />
       <Image src={meTopBackground} className="me-background" mode="widthFix" />
       <View className="me-list">
         <View className="me-item me-profile">
           <Image
-            src="https://img2.woyaogexing.com/2020/04/14/fa870d305ba64868a585b8ccbd270a5b!400x400.jpeg"
+            src={me.headurl ? me.headurl : patientDefault}
             className="me-head-profile"
           />
           <View className="me-describe">
-            <Text>用户名</Text>
-            <Text className="me-position">哈尔滨</Text>
+            <Text>{me.name}</Text>
+            <Text className="me-position">{me.address ? me.address : '未填写地址'}</Text>
           </View>
         </View>
         <View className="me-item">
