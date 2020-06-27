@@ -29,8 +29,6 @@ const AddPatient = () => {
       });
 
       if (res) {
-        console.log(res.data.data);
-
         setName(res.data.data.name);
         setPhone(res.data.data.phone);
         setIdentify(res.data.data.identify);
