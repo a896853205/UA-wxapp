@@ -13,5 +13,6 @@ export const DOCTOR_LIST = `${DominConfigs.DOMAIN}/doctor/list`;
 export const DOCTOR_DETAIL = `${DominConfigs.DOMAIN}/doctor/detail`;
 export const DOCTOR_BIND = `${DominConfigs.DOMAIN}/doctor/bind`;
 export const DOCTOR_ACTIVE = `${DominConfigs.DOMAIN}/doctor/active`;
+export const ARTICLE_TOP = `${DominConfigs.DOMAIN}/article/top`;
 
 export const CHART_LINE = `${DominConfigs.DOMAIN}/chart/line`;

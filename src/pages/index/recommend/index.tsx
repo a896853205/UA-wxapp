@@ -1,6 +1,9 @@
-import Taro, { memo } from '@tarojs/taro';
+import Taro, { memo, useState, useEffect } from '@tarojs/taro';
 import { View, Swiper, SwiperItem, Image, Text } from '@tarojs/components';
-import { AtIcon } from 'taro-ui';
+import { AtIcon, AtToast, AtMessage } from 'taro-ui';
+
+import { ARTICLE_TOP } from '../../../constants/api-constants';
+import http from '../../../util/http';
 
 import './recommend.css';
 // #region 书写注意
@@ -29,9 +32,42 @@ const Recommend = () => {
    * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
+
+  const [getDataLoading, setGetDataLoading] = useState(false);
+  const [articleList, setArticleList] = useState<any>([]);
+
+  useEffect(() => {
+    (async () => {
+      setGetDataLoading(true);
+
+      const res = await http({
+        url: ARTICLE_TOP,
+        method: 'GET',
+      });
+
+      if (res.statusCode === 500) {
+        Taro.atMessage({
+          message: '获取列表失败',
+          type: 'error',
+        });
+      } else if (res.statusCode === 200) {
+        setArticleList(res.data.data.rows);
+      }
+
+      setGetDataLoading(false);
+    })();
+  }, []);
+
   return (
     <View className="recommed-box">
       <View className="recommed-top-box">
+        <AtToast
+          isOpened={getDataLoading}
+          hasMask
+          status="loading"
+          text="医生信息加载中..."
+        />
+        <AtMessage />
         <View className="recommend-title">
           <AtIcon value="streaming" color="#6190e8" />
           <Text className="recommend-title-text">精选专题</Text>
@@ -74,7 +110,25 @@ const Recommend = () => {
         </Swiper>
       </View>
       <View className="recommend-list-box">
-        <View className="recommend-item-box">
+        {articleList.map((articleItem) => (
+          <View className="recommend-item-box">
+            <View className="recommend-item-left-box">
+              <Text className="recommend-item-title">
+                {articleItem.title}
+              </Text>
+              <Text className="recommend-item-describe">
+                <Text>尿酸管理小程序</Text>
+                <Text className="read-num">8230阅读</Text>
+              </Text>
+            </View>
+            <Image
+              className="recommend-item-right-img"
+              mode="aspectFill"
+              src={articleItem.cover}
+            />
+          </View>
+        ))}
+        {/* <View className="recommend-item-box">
           <View className="recommend-item-left-box">
             <Text className="recommend-item-title">
               糖尿病早期,胰岛细胞损伤具有逆转可能性
@@ -121,7 +175,7 @@ const Recommend = () => {
             mode="aspectFill"
             src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2397700751,3035183254&fm=26&gp=0.jpg"
           />
-        </View>
+        </View> */}
       </View>
     </View>
   );
