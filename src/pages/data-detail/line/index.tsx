@@ -5,9 +5,7 @@ import { AtButton, AtList, AtListItem, AtToast } from 'taro-ui';
 import { useSelector } from '@tarojs/redux';
 import Chart from 'taro-echarts';
 
-import {
-  MEASURE_BASIC,
-} from '../../../constants/api-constants';
+import { MEASURE_BASIC, CHART_LINE } from '../../../constants/api-constants';
 import http from '../../../util/http';
 
 import './line.css';
@@ -22,10 +20,23 @@ interface IStatus {
 
 const TIME_RANGE = ['过去一周', '过去一个月'];
 
+const getCurrentWeek = () => {
+  const week = ['日', '一', '二', '三', '四', '五', '六'];
+  let now = new Date();
+
+  let spli = week.splice(0, now.getDay());
+
+  return [...week, ...spli];
+};
+
 const Line = () => {
   const [timeSpanIndex, setTimeSpanIndex] = useState(0);
   const [measureBasicList, setMeasureBasicList] = useState<any>([]);
   const [getDataLoading, setGetDataLoading] = useState(false);
+
+  const [fat, setFat] = useState<any>([]);
+  const [sugar, setSugar] = useState<any>([]);
+  const [uric, setUric] = useState<any>([]);
   const { measureType } = useSelector<IStatus, IMeasure>(
     (state) => state.measure
   );
@@ -35,12 +46,12 @@ const Line = () => {
       setGetDataLoading(true);
 
       const res = await http({
-        url: MEASURE_BASIC,
+        url: CHART_LINE,
         method: 'GET',
         data: {
           type: measureType === 'single' ? measureType : 'triple',
-          days: timeSpanIndex ? 30 : 7
-        }
+          days: timeSpanIndex ? 30 : 7,
+        },
       });
 
       if (res.statusCode === 500) {
@@ -49,8 +60,14 @@ const Line = () => {
           type: 'error',
         });
       } else if (res.statusCode === 200) {
-        setMeasureBasicList(res.data.data);
-        console.log(measureBasicList);
+        if (measureType === 'single') {
+          setMeasureBasicList(res.data.data);
+        } else {
+          // 设置三个数组
+          setFat(res.data.data.fat);
+          setSugar(res.data.data.sugar);
+          setUric(res.data.data.uric);
+        }
       }
 
       setGetDataLoading(false);
@@ -94,16 +111,16 @@ const Line = () => {
               },
               xAxis: {
                 type: 'category',
-                data: ['一', '二', '三', '四', '五', '六', '日'],
-                name: '星期',
+                data: timeSpanIndex ? new Array(30).fill('') : getCurrentWeek(),
+                name: timeSpanIndex ? '天' : '星期',
               },
               yAxis: {
                 type: 'value',
-                name: 'mmol/L',
+                name: 'μmol/L',
               },
               series: [
                 {
-                  data: [160, 351, 652, 352, 849, 352, 849],
+                  data: measureBasicList,
                   type: 'line',
                 },
               ],
@@ -112,6 +129,7 @@ const Line = () => {
           />
         </View>
       ) : null}
+
       {measureType === 'joint' ? (
         <View className="line-box">
           <View className="line-title">尿酸</View>
@@ -124,16 +142,16 @@ const Line = () => {
               },
               xAxis: {
                 type: 'category',
-                data: ['一', '二', '三', '四', '五', '六', '日'],
-                name: '星期',
+                data: timeSpanIndex ? new Array(30).fill('') : getCurrentWeek(),
+                name: timeSpanIndex ? '天' : '星期',
               },
               yAxis: {
                 type: 'value',
-                name: 'mmol/L',
+                name: 'μmol/L',
               },
               series: [
                 {
-                  data: [160, 351, 652, 352, 849, 352, 849],
+                  data: uric,
                   type: 'line',
                 },
               ],
@@ -150,8 +168,8 @@ const Line = () => {
               },
               xAxis: {
                 type: 'category',
-                data: ['一', '二', '三', '四', '五', '六', '日'],
-                name: '星期',
+                data: timeSpanIndex ? new Array(30).fill('') : getCurrentWeek(),
+                name: timeSpanIndex ? '天' : '星期',
               },
               yAxis: {
                 type: 'value',
@@ -159,7 +177,7 @@ const Line = () => {
               },
               series: [
                 {
-                  data: [160, 351, 652, 352, 849, 352, 849],
+                  data: fat,
                   type: 'line',
                 },
               ],
@@ -176,8 +194,8 @@ const Line = () => {
               },
               xAxis: {
                 type: 'category',
-                data: ['一', '二', '三', '四', '五', '六', '日'],
-                name: '星期',
+                data: timeSpanIndex ? new Array(30).fill('') : getCurrentWeek(),
+                name: timeSpanIndex ? '天' : '星期',
               },
               yAxis: {
                 type: 'value',
@@ -185,7 +203,7 @@ const Line = () => {
               },
               series: [
                 {
-                  data: [160, 351, 652, 352, 849, 352, 849],
+                  data: sugar,
                   type: 'line',
                 },
               ],

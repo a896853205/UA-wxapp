@@ -3,10 +3,7 @@ import { View } from '@tarojs/components';
 import { AtInput, AtButton, AtForm, AtToast, AtMessage } from 'taro-ui';
 import { useSelector } from '@tarojs/redux';
 
-import {
-  ME,
-  ME_UPDATE
-} from '../../constants/api-constants';
+import { ME, ME_UPDATE } from '../../constants/api-constants';
 import http from '../../util/http';
 
 interface IMeasure {
@@ -45,8 +42,7 @@ const Aim = () => {
         if (measureType === 'single') {
           setSingleUricHigh(res.data.data.uric_high.toString());
           setSingleUricLow(res.data.data.uric_low.toString());
-        }
-        else {
+        } else {
           setUricHigh(res.data.data.uric_high.toString());
           setUricLow(res.data.data.uric_low.toString());
           setSugarHigh(res.data.data.sugar_high.toString());
@@ -69,10 +65,9 @@ const Aim = () => {
       if (measureType === 'single') {
         params = {
           uric_high: Number(singleUricHigh),
-          uric_low: Number(singleUricLow)
+          uric_low: Number(singleUricLow),
         };
-      }
-      else {
+      } else {
         params = {
           uric_high: Number(uricHigh),
           uric_low: Number(uricLow),
@@ -81,9 +76,7 @@ const Aim = () => {
           fat_high: Number(fatHigh),
           fat_low: Number(fatLow),
         };
-      };
-      console.log('shuchu=', params);
-
+      }
 
       const res = await http({
         url: ME_UPDATE,
@@ -100,7 +93,7 @@ const Aim = () => {
         });
       } else if (res.statusCode === 200) {
         Taro.redirectTo({
-          url: '../../pages/index/index?cur=1',
+          url: '../../pages/index/index?cur=0',
         });
       }
 
@@ -132,7 +125,9 @@ const Aim = () => {
               type="number"
               placeholder="请输入尿酸值的目标(最高值)"
               value={singleUricHigh}
-              onChange={(e) => { setSingleUricHigh(`${e}`); }}
+              onChange={(e) => {
+                setSingleUricHigh(`${e}`);
+              }}
             />
             <AtInput
               name="UA"
@@ -140,9 +135,16 @@ const Aim = () => {
               type="number"
               placeholder="请输入尿酸值的目标(最低值)"
               value={singleUricLow}
-              onChange={(e) => { setSingleUricLow(`${e}`); }}
+              onChange={(e) => {
+                setSingleUricLow(`${e}`);
+              }}
             />
-            <AtButton full formType="submit" loading={saveDataLoading} type="primary">
+            <AtButton
+              full
+              formType="submit"
+              loading={saveDataLoading}
+              type="primary"
+            >
               保存
             </AtButton>
           </AtForm>
@@ -157,7 +159,9 @@ const Aim = () => {
               type="number"
               placeholder="请输入尿酸值的目标(最高值)"
               value={uricHigh}
-              onChange={(e) => { setUricHigh(`${e}`); }}
+              onChange={(e) => {
+                setUricHigh(`${e}`);
+              }}
             />
             <AtInput
               name="UA"
@@ -165,7 +169,9 @@ const Aim = () => {
               type="number"
               placeholder="请输入尿酸值的目标(最低值)"
               value={uricLow}
-              onChange={(e) => { setUricLow(`${e}`); }}
+              onChange={(e) => {
+                setUricLow(`${e}`);
+              }}
             />
             <AtInput
               name="UA"
@@ -173,7 +179,9 @@ const Aim = () => {
               type="number"
               placeholder="请输入血糖值的目标(最高值)"
               value={sugarHigh}
-              onChange={(e) => { setSugarHigh(`${e}`); }}
+              onChange={(e) => {
+                setSugarHigh(`${e}`);
+              }}
             />
             <AtInput
               name="UA"
@@ -181,7 +189,9 @@ const Aim = () => {
               type="number"
               placeholder="请输入血糖值的目标(最低值)"
               value={sugarLow}
-              onChange={(e) => { setSugarLow(`${e}`); }}
+              onChange={(e) => {
+                setSugarLow(`${e}`);
+              }}
             />
             <AtInput
               name="UA"
@@ -189,7 +199,9 @@ const Aim = () => {
               type="number"
               placeholder="请输入血脂值的目标(最高值)"
               value={fatHigh}
-              onChange={(e) => { setFatHigh(`${e}`); }}
+              onChange={(e) => {
+                setFatHigh(`${e}`);
+              }}
             />
             <AtInput
               name="UA"
@@ -197,15 +209,22 @@ const Aim = () => {
               type="number"
               placeholder="请输入血脂值的目标(最低值)"
               value={fatLow}
-              onChange={(e) => { setFatLow(`${e}`); }}
+              onChange={(e) => {
+                setFatLow(`${e}`);
+              }}
             />
-            <AtButton full formType="submit" loading={saveDataLoading} type="primary">
+            <AtButton
+              full
+              formType="submit"
+              loading={saveDataLoading}
+              type="primary"
+            >
               保存
             </AtButton>
           </AtForm>
         </View>
       ) : null}
-    </View >
+    </View>
   );
 };
 

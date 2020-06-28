@@ -67,12 +67,12 @@ const AddPatient = () => {
 
       if (res.statusCode === 500) {
         Taro.atMessage({
-          message: '增加失败',
+          message: '更新失败',
           type: 'error',
         });
       } else if (res.statusCode === 200) {
         Taro.redirectTo({
-          url: '../../pages/index/index?cur=1',
+          url: '../../pages/index/index?cur=2',
         });
       }
 
