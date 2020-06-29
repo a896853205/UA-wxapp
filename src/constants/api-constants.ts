@@ -17,3 +17,4 @@ export const ARTICLE_TOP = `${DominConfigs.DOMAIN}/article/top`;
 export const ARTICLE_DETAIL = `${DominConfigs.DOMAIN}/article/detail`;
 
 export const CHART_LINE = `${DominConfigs.DOMAIN}/chart/line`;
+export const CHART_PIE = `${DominConfigs.DOMAIN}/chart/pie`;

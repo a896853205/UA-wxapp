@@ -1,13 +1,13 @@
-// TODO: 上面时间段选择,饼图分析(几次偏高,几次正常),总次数,连续高位次数,最高mmol/L,最长高位天数
+// TODO: 上面时间段选择,饼图分析(几次偏高,几次正常),总次数,连续高位次数,最高mmol/L,最长高位次数
 // TODO: 将data-detail的折线组件抽象到这里
 import Taro, { memo, useState, useEffect } from '@tarojs/taro';
 import { View, Text, Picker } from '@tarojs/components';
-import { AtIcon, AtList, AtListItem, AtToast } from 'taro-ui';
+import { AtIcon, AtList, AtListItem, AtToast, AtButton } from 'taro-ui';
 import { useSelector } from '@tarojs/redux';
 import Chart from 'taro-echarts';
 
 import {
-  MEASURE_BASIC,
+  CHART_PIE,
 } from '../../../constants/api-constants';
 import http from '../../../util/http';
 
@@ -25,7 +25,10 @@ const TIME_RANGE = ['过去一周', '过去一个月'];
 
 const Analysis = () => {
   const [timeSpanIndex, setTimeSpanIndex] = useState(0);
-  const [measureBasicList, setMeasureBasicList] = useState<any>([]);
+  const [fat, setFat] = useState<any>([]);
+  const [sugar, setSugar] = useState<any>([]);
+  const [uric, setUric] = useState<any>([]);
+  const [singleSugar, setSingleSugar] = useState<any>([]);
   const [getDataLoading, setGetDataLoading] = useState(false);
   const { measureType } = useSelector<IStatus, IMeasure>(
     (state) => state.measure
@@ -36,7 +39,7 @@ const Analysis = () => {
       setGetDataLoading(true);
 
       const res = await http({
-        url: MEASURE_BASIC,
+        url: CHART_PIE,
         method: 'GET',
         data: {
           type: measureType === 'single' ? measureType : 'triple',
@@ -50,8 +53,15 @@ const Analysis = () => {
           type: 'error',
         });
       } else if (res.statusCode === 200) {
-        setMeasureBasicList(res.data.data);
-        console.log(measureBasicList);
+        console.log(res.data.data);
+
+        if (measureType === 'single') {
+          setSingleSugar(res.data.data)
+        } else {
+          setFat(res.data.data.fat);
+          setSugar(res.data.data.sugar);
+          setUric(res.data.data.uric);
+        }
       }
 
       setGetDataLoading(false);
@@ -96,11 +106,11 @@ const Analysis = () => {
                       // 数据项的名称
                       name: '偏高',
                       // 数据项值8
-                      value: 10,
+                      value: singleSugar.high_times,
                     },
                     {
                       name: '正常',
-                      value: 20,
+                      value: singleSugar.normal_times,
                     },
                   ],
                   type: 'pie',
@@ -113,39 +123,39 @@ const Analysis = () => {
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="rgb(255, 107, 132)" className="tag" />
               <Text className="tag">
-                偏高<Text className="red-num">20</Text>次
+                偏高<Text className="red-num">{singleSugar.high_times}</Text>次
               </Text>
             </View>
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="rgb(147, 206, 84)" className="tag" />
               <Text className="tag">
-                正常<Text className="green-num">6</Text>次
+                正常<Text className="green-num">{singleSugar.normal_times}</Text>次
               </Text>
             </View>
 
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="#6190e8" className="tag" />
               <Text className="tag">
-                总共<Text className="blue-num">20</Text>次
+                总共<Text className="blue-num">{singleSugar.total_times}</Text>次
               </Text>
             </View>
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="#6190e8" className="tag" />
               <Text className="tag">
-                连续高位<Text className="blue-num">6</Text>次
+                连续高位<Text className="blue-num">{singleSugar.continue_high_times}</Text>次
               </Text>
             </View>
 
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="#6190e8" className="tag" />
               <Text className="tag">
-                最高<Text className="blue-num">652</Text>mmol/L
+                最高<Text className="blue-num">{singleSugar.highest_value}</Text>mmol/L
               </Text>
             </View>
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="#6190e8" className="tag" />
               <Text className="tag">
-                最长高位<Text className="blue-num">6</Text>天
+                最长高位<Text className="blue-num">{singleSugar.longest_high_times}</Text>次
               </Text>
             </View>
           </View>
@@ -164,11 +174,11 @@ const Analysis = () => {
                       // 数据项的名称
                       name: '偏高',
                       // 数据项值8
-                      value: 10,
+                      value: uric.high_times,
                     },
                     {
                       name: '正常',
-                      value: 20,
+                      value: uric.normal_times,
                     },
                   ],
                   type: 'pie',
@@ -181,39 +191,39 @@ const Analysis = () => {
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="rgb(255, 107, 132)" className="tag" />
               <Text className="tag">
-                偏高<Text className="red-num">20</Text>次
+                偏高<Text className="red-num">{uric.high_times}</Text>次
               </Text>
             </View>
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="rgb(147, 206, 84)" className="tag" />
               <Text className="tag">
-                正常<Text className="green-num">6</Text>次
+                正常<Text className="green-num">{uric.normal_times}</Text>次
               </Text>
             </View>
 
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="#6190e8" className="tag" />
               <Text className="tag">
-                总共<Text className="blue-num">20</Text>次
+                总共<Text className="blue-num">{uric.total_times}</Text>次
               </Text>
             </View>
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="#6190e8" className="tag" />
               <Text className="tag">
-                连续高位<Text className="blue-num">6</Text>次
+                连续高位<Text className="blue-num">{uric.continue_high_times}</Text>次
               </Text>
             </View>
 
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="#6190e8" className="tag" />
               <Text className="tag">
-                最高<Text className="blue-num">652</Text>mmol/L
+                最高<Text className="blue-num">{uric.highest_value}</Text>mmol/L
               </Text>
             </View>
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="#6190e8" className="tag" />
               <Text className="tag">
-                最长高位<Text className="blue-num">6</Text>天
+                最长高位<Text className="blue-num">{uric.longest_high_times}</Text>次
               </Text>
             </View>
           </View>
@@ -228,11 +238,11 @@ const Analysis = () => {
                       // 数据项的名称
                       name: '偏高',
                       // 数据项值8
-                      value: 10,
+                      value: fat.high_times,
                     },
                     {
                       name: '正常',
-                      value: 20,
+                      value: fat.normal_times,
                     },
                   ],
                   type: 'pie',
@@ -245,39 +255,39 @@ const Analysis = () => {
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="rgb(255, 107, 132)" className="tag" />
               <Text className="tag">
-                偏高<Text className="red-num">20</Text>次
+                偏高<Text className="red-num">{fat.high_times}</Text>次
               </Text>
             </View>
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="rgb(147, 206, 84)" className="tag" />
               <Text className="tag">
-                正常<Text className="green-num">6</Text>次
+                正常<Text className="green-num">{fat.normal_times}</Text>次
               </Text>
             </View>
 
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="#6190e8" className="tag" />
               <Text className="tag">
-                总共<Text className="blue-num">20</Text>次
+                总共<Text className="blue-num">{fat.total_times}</Text>次
               </Text>
             </View>
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="#6190e8" className="tag" />
               <Text className="tag">
-                连续高位<Text className="blue-num">6</Text>次
+                连续高位<Text className="blue-num">{fat.continue_high_times}</Text>次
               </Text>
             </View>
 
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="#6190e8" className="tag" />
               <Text className="tag">
-                最高<Text className="blue-num">652</Text>mmol/L
+                最高<Text className="blue-num">{fat.highest_value}</Text>mmol/L
               </Text>
             </View>
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="#6190e8" className="tag" />
               <Text className="tag">
-                最长高位<Text className="blue-num">6</Text>天
+                最长高位<Text className="blue-num">{fat.longest_high_times}</Text>次
               </Text>
             </View>
           </View>
@@ -292,11 +302,11 @@ const Analysis = () => {
                       // 数据项的名称
                       name: '偏高',
                       // 数据项值8
-                      value: 10,
+                      value: sugar.high_times,
                     },
                     {
                       name: '正常',
-                      value: 20,
+                      value: sugar.normal_times,
                     },
                   ],
                   type: 'pie',
@@ -309,44 +319,54 @@ const Analysis = () => {
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="rgb(255, 107, 132)" className="tag" />
               <Text className="tag">
-                偏高<Text className="red-num">20</Text>次
+                偏高<Text className="red-num">{sugar.high_times}</Text>次
               </Text>
             </View>
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="rgb(147, 206, 84)" className="tag" />
               <Text className="tag">
-                正常<Text className="green-num">6</Text>次
+                正常<Text className="green-num">{sugar.normal_times}</Text>次
               </Text>
             </View>
 
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="#6190e8" className="tag" />
               <Text className="tag">
-                总共<Text className="blue-num">20</Text>次
+                总共<Text className="blue-num">{sugar.total_times}</Text>次
               </Text>
             </View>
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="#6190e8" className="tag" />
               <Text className="tag">
-                连续高位<Text className="blue-num">6</Text>次
+                连续高位<Text className="blue-num">{sugar.continue_high_times}</Text>次
               </Text>
             </View>
 
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="#6190e8" className="tag" />
               <Text className="tag">
-                最高<Text className="blue-num">652</Text>mmol/L
+                最高<Text className="blue-num">{sugar.highest_value}</Text>mmol/L
               </Text>
             </View>
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="#6190e8" className="tag" />
               <Text className="tag">
-                最长高位<Text className="blue-num">6</Text>天
+                最长高位<Text className="blue-num">{sugar.longest_high_times}</Text>次
               </Text>
             </View>
           </View>
         </View>
       ) : null}
+      <AtButton
+        type="primary"
+        size="normal"
+        full={true}
+        onClick={() => {
+          Taro.navigateTo({ url: '/pages/save-data/index' });
+        }}
+      >
+        手动添加数据
+      </AtButton>
     </View>
   );
 };
