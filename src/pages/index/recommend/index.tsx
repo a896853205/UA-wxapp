@@ -111,7 +111,12 @@ const Recommend = () => {
       </View>
       <View className="recommend-list-box">
         {articleList.map((articleItem) => (
-          <View className="recommend-item-box">
+          <View className="recommend-item-box" key={articleItem.id} onClick={() => {
+            Taro.setStorageSync('newsIndex', articleItem.id);
+            Taro.navigateTo({
+              url: '/pages/news-detail/index',
+            });
+          }}>
             <View className="recommend-item-left-box">
               <Text className="recommend-item-title">
                 {articleItem.title}
@@ -177,7 +182,7 @@ const Recommend = () => {
           />
         </View> */}
       </View>
-    </View>
+    </View >
   );
 };
 
