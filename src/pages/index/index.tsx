@@ -1,4 +1,4 @@
-import Taro, { useState, memo } from '@tarojs/taro';
+import Taro, { useState, memo, useRouter } from '@tarojs/taro';
 import { View } from '@tarojs/components';
 import { AtTabBar } from 'taro-ui';
 
@@ -25,7 +25,13 @@ interface Index {
 }
 
 const Index = () => {
-  const [tabCur, setTabCur] = useState(0);
+  const router = useRouter();
+
+  const [tabCur, setTabCur] = useState(-1);
+
+  if (tabCur === -1 && router.params.cur !== undefined) {
+    setTabCur(Number.parseInt(router.params.cur));
+  }
 
   return (
     <View>

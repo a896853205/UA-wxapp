@@ -94,7 +94,7 @@ const Me = () => {
     } else if (res.statusCode === 200) {
       dispatch(changeSelectedDoctor(true));
       if (!selected) {
-        Taro.reLaunch({ url: '/pages/index/index?cur=0' });
+        Taro.navigateTo({ url: '/pages/doctor/index' });
       }
     }
   };

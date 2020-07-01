@@ -83,7 +83,7 @@ const Preview = () => {
               Taro.navigateTo({ url: '/pages/sync-data/index' });
               break;
             case 1:
-              Taro.navigateTo({ url: '/pages/data-detail/index' });
+              Taro.navigateTo({ url: '/pages/data-detail/index?cur=0' });
               break;
             case 2:
               Taro.navigateTo({ url: '/pages/remind/index' });

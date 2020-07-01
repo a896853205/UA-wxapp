@@ -65,7 +65,7 @@ const SaveData = () => {
         });
       } else if (res.statusCode === 200) {
         Taro.redirectTo({
-          url: '../../pages/index/index',
+          url: '../../pages/data-detail/index?cur=0',
         });
       }
 
