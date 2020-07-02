@@ -49,7 +49,7 @@ const Authority = () => {
             Taro.setStorageSync('token', res.data.data.token);
             // 登录成功返回首页并刷新首页数据
             if (res.data.data.registerd) {
-              Taro.reLaunch({ url: '/pages/index/index' });
+              Taro.reLaunch({ url: '/pages/index/index?cur=0' });
             } else {
               Taro.reLaunch({ url: '/pages/register/index' });
             }
@@ -124,7 +124,7 @@ const Authority = () => {
           className="btn primary"
           onClick={() => {
             Taro.redirectTo({
-              url: '../../pages/index/index',
+              url: '../../pages/index/index?cur=0',
             });
           }}
         >

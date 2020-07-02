@@ -1,4 +1,4 @@
-import Taro, { useState, useEffect, memo } from '@tarojs/taro';
+import Taro, { useState, useEffect, memo, useRouter } from '@tarojs/taro';
 import { View } from '@tarojs/components';
 import { AtTabBar } from 'taro-ui';
 import { useSelector } from '@tarojs/redux';
@@ -21,7 +21,13 @@ interface IStatus {
 const TAB_LIST = [{ title: '折线' }, { title: '统计' }];
 
 const DataDetail = () => {
-  const [tabCur, setTabCur] = useState(0);
+  const router = useRouter();
+
+  const [tabCur, setTabCur] = useState(-1);
+
+  if (tabCur === -1 && router.params.cur !== undefined) {
+    setTabCur(Number.parseInt(router.params.cur));
+  }
   const { measureText } = useSelector<IStatus, IMeasure>(
     (state) => state.measure
   );
