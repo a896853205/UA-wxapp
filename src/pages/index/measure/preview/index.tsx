@@ -80,7 +80,7 @@ const Preview = () => {
           console.log(_item, index);
           switch (index) {
             case 0:
-              Taro.navigateTo({ url: '/pages/sync-data/index' });
+              Taro.navigateTo({ url: '/pages/device/index' });
               break;
             case 1:
               Taro.navigateTo({ url: '/pages/data-detail/index' });
@@ -119,10 +119,10 @@ const Preview = () => {
             image: doctor,
             value: '选择医生',
           },
-          {
-            image: config,
-            value: '设备设置',
-          },
+          // {
+          //   image: config,
+          //   value: '设备设置',
+          // },
         ]}
       />
     </View>
