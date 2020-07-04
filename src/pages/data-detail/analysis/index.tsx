@@ -53,7 +53,6 @@ const Analysis = () => {
           type: 'error',
         });
       } else if (res.statusCode === 200) {
-        console.log(res.data.data);
 
         if (measureType === 'single') {
           setSingleSugar(res.data.data)
