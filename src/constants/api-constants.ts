@@ -9,6 +9,7 @@ export const ME = `${DominConfigs.DOMAIN}/me`;
 export const ME_UPDATE = `${DominConfigs.DOMAIN}/me/update`;
 export const MEASURE_BASIC = `${DominConfigs.DOMAIN}/measure/basic`;
 export const MEASURE_UPDATE = `${DominConfigs.DOMAIN}/measure/update`;
+export const MEASURE_LATEST = `${DominConfigs.DOMAIN}/measure/latest`;
 export const DOCTOR_LIST = `${DominConfigs.DOMAIN}/doctor/list`;
 export const DOCTOR_DETAIL = `${DominConfigs.DOMAIN}/doctor/detail`;
 export const DOCTOR_BIND = `${DominConfigs.DOMAIN}/doctor/bind`;
