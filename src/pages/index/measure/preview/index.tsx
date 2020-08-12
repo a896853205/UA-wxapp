@@ -11,15 +11,10 @@ import refresh from '../../../../assets/icon/refresh.png';
 import aim from '../../../../assets/icon/aim.png';
 import bar from '../../../../assets/icon/bar.png';
 import clock from '../../../../assets/icon/clock.png';
-import config from '../../../../assets/icon/config.png';
 import doctor from '../../../../assets/icon/doctor.png';
 
-import {
-  MEASURE_LATEST,
-} from '../../../../constants/api-constants';
+import { MEASURE_LATEST } from '../../../../constants/api-constants';
 import http from '../../../../util/http';
-
-import './analysis.css';
 
 interface IMeasure {
   measureType: string;
@@ -45,7 +40,7 @@ const Preview = () => {
         method: 'GET',
         data: {
           type: measureType === 'single' ? measureType : 'triple',
-        }
+        },
       });
 
       if (res.statusCode === 500) {
@@ -54,7 +49,6 @@ const Preview = () => {
           type: 'error',
         });
       } else if (res.statusCode === 200) {
-
         if (measureType === 'single') {
           setSingleUric(res.data.data);
         } else {
@@ -78,7 +72,8 @@ const Preview = () => {
       {measureType === 'single' ? (
         <View className="value-preview-box">
           <View className="measure-preview">
-            {singleUric.uric}<Text className="measure-unit">mmol/L</Text>
+            {singleUric.uric}
+            <Text className="measure-unit">μmol/L</Text>
           </View>
           <View className="measure-description">
             连续<Text className="day">10</Text>天高于目标值
@@ -92,7 +87,7 @@ const Preview = () => {
             <Text className="measure-project">尿酸</Text>
             <Text className="measure-value">
               <Text className="value-num">{tripleMeasure.uric}</Text>
-              <Text className="measure-unit">mmol/L</Text>
+              <Text className="measure-unit">μmol/L</Text>
             </Text>
             <Text>
               <Text className="day">10</Text>天

@@ -148,7 +148,7 @@ const Analysis = () => {
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="#6190e8" className="tag" />
               <Text className="tag">
-                最高<Text className="blue-num">{singleSugar.highest_value}</Text>mmol/L
+                最高<Text className="blue-num">{singleSugar.highest_value}</Text>μmol/L
               </Text>
             </View>
             <View className="analysis-describe-item">
@@ -216,7 +216,7 @@ const Analysis = () => {
             <View className="analysis-describe-item">
               <AtIcon value="tag" color="#6190e8" className="tag" />
               <Text className="tag">
-                最高<Text className="blue-num">{uric.highest_value}</Text>mmol/L
+                最高<Text className="blue-num">{uric.highest_value}</Text>μmol/L
               </Text>
             </View>
             <View className="analysis-describe-item">

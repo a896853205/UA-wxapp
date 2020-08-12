@@ -2,9 +2,7 @@ import Taro, { memo, useState } from '@tarojs/taro';
 import { View, Picker } from '@tarojs/components';
 import { useSelector } from '@tarojs/redux';
 
-import {
-  MEASURE_UPDATE,
-} from '../../constants/api-constants';
+import { MEASURE_UPDATE } from '../../constants/api-constants';
 import http from '../../util/http';
 
 import { AtButton, AtInput, AtList, AtListItem, AtMessage } from 'taro-ui';
@@ -29,7 +27,7 @@ const SaveData = () => {
     if (!saveDataLoading) {
       setSaveDataLoading(true);
 
-      const timeData = new Date(date + ' ' + time);
+      const timeData = new Date((date + ' ' + time).replace(/-/g, '/'));
       let params;
 
       if (measureType === 'single') {
@@ -52,10 +50,12 @@ const SaveData = () => {
         url: MEASURE_UPDATE,
         method: 'POST',
         data: {
-          datas: [{
-            ...params
-          }]
-        }
+          datas: [
+            {
+              ...params,
+            },
+          ],
+        },
       });
 
       if (res.statusCode === 500) {
@@ -81,41 +81,45 @@ const SaveData = () => {
           <AtInput
             name="UA"
             title="尿酸值"
-            type="number"
+            type="digit"
             placeholder="请输入尿酸值"
             onChange={(e) => {
               setUric(Number(e));
             }}
           />
 
-          <Picker mode="date" onChange={(e) => {
-            setDate(`${e.detail.value}`);
-          }} value={''}>
+          <Picker
+            mode="date"
+            onChange={(e) => {
+              setDate(`${e.detail.value}`);
+            }}
+            value={''}
+          >
             <AtList>
-              <AtListItem
-                title="日期选择："
-                extraText={date}
-                arrow="right"
-              />
+              <AtListItem title="日期选择：" extraText={date} arrow="right" />
             </AtList>
           </Picker>
 
-          <Picker mode="time" onChange={(e) => {
-            setTime(`${e.detail.value}`);
-          }} value={''}>
+          <Picker
+            mode="time"
+            onChange={(e) => {
+              setTime(`${e.detail.value}`);
+            }}
+            value={''}
+          >
             <AtList>
-              <AtListItem
-                title="时间选择："
-                extraText={time}
-                arrow="right"
-              />
+              <AtListItem title="时间选择：" extraText={time} arrow="right" />
             </AtList>
           </Picker>
 
-          <AtButton onClick={submit} type="primary" full={true} loading={saveDataLoading}>
+          <AtButton
+            onClick={submit}
+            type="primary"
+            full={true}
+            loading={saveDataLoading}
+          >
             保存
-            </AtButton>
-
+          </AtButton>
         </View>
       ) : null}
       {measureType === 'joint' ? (
@@ -123,7 +127,7 @@ const SaveData = () => {
           <AtInput
             name="UA"
             title="尿酸值"
-            type="number"
+            type="digit"
             placeholder="请输入尿酸值"
             onChange={(e) => {
               setUric(Number(e));
@@ -132,7 +136,7 @@ const SaveData = () => {
           <AtInput
             name="UA"
             title="血脂值"
-            type="number"
+            type="digit"
             placeholder="请输入血脂值"
             onChange={(e) => {
               setFat(Number(e));
@@ -141,41 +145,45 @@ const SaveData = () => {
           <AtInput
             name="UA"
             title="血糖值"
-            type="number"
+            type="digit"
             placeholder="请输入血糖值"
             onChange={(e) => {
               setSugar(Number(e));
             }}
           />
 
-          <Picker mode="date" onChange={(e) => {
-            setDate(`${e.detail.value}`);
-          }} value={''}>
+          <Picker
+            mode="date"
+            onChange={(e) => {
+              setDate(`${e.detail.value}`);
+            }}
+            value={''}
+          >
             <AtList>
-              <AtListItem
-                title="日期选择："
-                extraText={date}
-                arrow="right"
-              />
+              <AtListItem title="日期选择：" extraText={date} arrow="right" />
             </AtList>
           </Picker>
 
-          <Picker mode="time" onChange={(e) => {
-            setTime(`${e.detail.value}`);
-          }} value={''}>
+          <Picker
+            mode="time"
+            onChange={(e) => {
+              setTime(`${e.detail.value}`);
+            }}
+            value={''}
+          >
             <AtList>
-              <AtListItem
-                title="时间选择："
-                extraText={time}
-                arrow="right"
-              />
+              <AtListItem title="时间选择：" extraText={time} arrow="right" />
             </AtList>
           </Picker>
 
-          <AtButton onClick={submit} type="primary" full={true} loading={saveDataLoading}>
+          <AtButton
+            onClick={submit}
+            type="primary"
+            full={true}
+            loading={saveDataLoading}
+          >
             保存
-            </AtButton>
-
+          </AtButton>
         </View>
       ) : null}
     </View>

@@ -5,12 +5,8 @@ import { useDispatch } from '@tarojs/redux';
 
 import { changeSelectedDoctor } from '../../actions/doctor';
 import './doctor-detail.css';
-import meTopBackground from '../../assets/image/me-top-background.png';
 
-import {
-  DOCTOR_DETAIL,
-  DOCTOR_BIND,
-} from '../../constants/api-constants';
+import { DOCTOR_DETAIL, DOCTOR_BIND } from '../../constants/api-constants';
 import http from '../../util/http';
 
 type PageStateProps = {};
@@ -108,7 +104,11 @@ const Me = () => {
         text="医生详细信息加载中..."
       />
       <AtMessage />
-      <Image src={meTopBackground} className="me-background" mode="widthFix" />
+      <Image
+        src="https://s1.ax1x.com/2020/07/02/NbGpy4.png"
+        className="me-background"
+        mode="widthFix"
+      />
       <View className="me-list">
         <View className="me-item me-profile">
           <Image
@@ -123,15 +123,11 @@ const Me = () => {
         </View>
         <View className="me-item">
           <View className="item-title">个人简介</View>
-          <View className="item-name">
-            {intro}
-          </View>
+          <View className="item-name">{intro}</View>
         </View>
         <View className="me-item">
           <View className="item-title">擅长方向</View>
-          <View className="item-name">
-            {skill}
-          </View>
+          <View className="item-name">{skill}</View>
         </View>
         {selected ? null : (
           <View className="me-item">

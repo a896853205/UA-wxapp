@@ -6,7 +6,6 @@ import http from '../../../util/http';
 import { ME } from '../../../constants/api-constants';
 
 import './me.css';
-import meTopBackground from '../../../assets/image/me-top-background.png';
 import patientDefault from '../../../assets/image/patient-default.jpg';
 
 type PageStateProps = {};
@@ -60,20 +59,27 @@ const Me = () => {
         status="loading"
         text="个人信息加载中..."
       />
-      <Image src={meTopBackground} className="me-background" mode="widthFix" />
+      <Image
+        src="https://s1.ax1x.com/2020/07/02/NbGpy4.png"
+        className="me-background"
+        mode="widthFix"
+      />
       <View className="me-list">
         <View
           className="me-item me-profile"
           onClick={() => {
             Taro.navigateTo({ url: '/pages/me-update/index' });
-          }}>
+          }}
+        >
           <Image
             src={me.headurl ? me.headurl : patientDefault}
             className="me-head-profile"
           />
           <View className="me-describe">
             <Text>{me.name}</Text>
-            <Text className="me-position">{me.address ? me.address : '未填写地址'}</Text>
+            <Text className="me-position">
+              {me.address ? me.address : '未填写地址'}
+            </Text>
           </View>
         </View>
         <View className="me-item">

@@ -122,7 +122,7 @@ const Aim = () => {
             <AtInput
               name="UA"
               title="尿酸最高值"
-              type="number"
+              type="digit"
               placeholder="请输入尿酸值的目标(最高值)"
               value={singleUricHigh}
               onChange={(e) => {
@@ -132,7 +132,7 @@ const Aim = () => {
             <AtInput
               name="UA"
               title="尿酸最低值"
-              type="number"
+              type="digit"
               placeholder="请输入尿酸值的目标(最低值)"
               value={singleUricLow}
               onChange={(e) => {
@@ -156,7 +156,7 @@ const Aim = () => {
             <AtInput
               name="UA"
               title="尿酸最高值"
-              type="number"
+              type="digit"
               placeholder="请输入尿酸值的目标(最高值)"
               value={uricHigh}
               onChange={(e) => {
@@ -166,7 +166,7 @@ const Aim = () => {
             <AtInput
               name="UA"
               title="尿酸最低值"
-              type="number"
+              type="digit"
               placeholder="请输入尿酸值的目标(最低值)"
               value={uricLow}
               onChange={(e) => {
@@ -176,7 +176,7 @@ const Aim = () => {
             <AtInput
               name="UA"
               title="血糖最高值"
-              type="number"
+              type="digit"
               placeholder="请输入血糖值的目标(最高值)"
               value={sugarHigh}
               onChange={(e) => {
@@ -186,7 +186,7 @@ const Aim = () => {
             <AtInput
               name="UA"
               title="血糖最低值"
-              type="number"
+              type="digit"
               placeholder="请输入血糖值的目标(最低值)"
               value={sugarLow}
               onChange={(e) => {
@@ -196,7 +196,7 @@ const Aim = () => {
             <AtInput
               name="UA"
               title="血脂最高值"
-              type="number"
+              type="digit"
               placeholder="请输入血脂值的目标(最高值)"
               value={fatHigh}
               onChange={(e) => {
@@ -206,7 +206,7 @@ const Aim = () => {
             <AtInput
               name="UA"
               title="血脂最低值"
-              type="number"
+              type="digit"
               placeholder="请输入血脂值的目标(最低值)"
               value={fatLow}
               onChange={(e) => {
