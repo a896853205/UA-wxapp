@@ -1,0 +1,1 @@
+export const ADD_MEASURE_DATA = 'ADD_MEASURE_DATA';

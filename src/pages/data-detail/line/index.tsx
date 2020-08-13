@@ -2,11 +2,12 @@
 import Taro, { useState, memo, useEffect } from '@tarojs/taro';
 import { View, Picker } from '@tarojs/components';
 import { AtButton, AtList, AtListItem, AtToast } from 'taro-ui';
-import { useSelector } from '@tarojs/redux';
+import { useSelector, useDispatch } from '@tarojs/redux';
 import Chart from 'taro-echarts';
 
 import { MEASURE_BASIC, CHART_LINE } from '../../../constants/api-constants';
 import http from '../../../util/http';
+import { addMeasureData } from '../../../actions/addMeasure';
 
 import './line.css';
 
@@ -16,6 +17,13 @@ interface IMeasure {
 }
 interface IStatus {
   measure: IMeasure;
+}
+
+interface IAdd {
+  isAdded: boolean;
+}
+interface Istatus {
+  addMeasure: IAdd;
 }
 
 const TIME_RANGE = ['过去一周', '过去一个月'];
@@ -37,42 +45,57 @@ const Line = () => {
   const [fat, setFat] = useState<any>([]);
   const [sugar, setSugar] = useState<any>([]);
   const [uric, setUric] = useState<any>([]);
+  const [isNeedRefresh, setIsNeedRefresh] = useState(true);
   const { measureType } = useSelector<IStatus, IMeasure>(
     (state) => state.measure
   );
+  const { isAdded } = useSelector<Istatus, IAdd>(
+    (state) => state.addMeasure
+  );
+  const dispatch = useDispatch();
 
   useEffect(() => {
     (async () => {
-      setGetDataLoading(true);
+      if (isNeedRefresh) {
+        setGetDataLoading(true);
 
-      const res = await http({
-        url: CHART_LINE,
-        method: 'GET',
-        data: {
-          type: measureType === 'single' ? measureType : 'triple',
-          days: timeSpanIndex ? 30 : 7,
-        },
-      });
-
-      if (res.statusCode === 500) {
-        Taro.atMessage({
-          message: '获取列表失败',
-          type: 'error',
+        const res = await http({
+          url: CHART_LINE,
+          method: 'GET',
+          data: {
+            type: measureType === 'single' ? measureType : 'triple',
+            days: timeSpanIndex ? 30 : 7,
+          },
         });
-      } else if (res.statusCode === 200) {
-        if (measureType === 'single') {
-          setMeasureBasicList(res.data.data);
-        } else {
-          // 设置三个数组
-          setFat(res.data.data.fat);
-          setSugar(res.data.data.sugar);
-          setUric(res.data.data.uric);
-        }
-      }
 
-      setGetDataLoading(false);
+        if (res.statusCode === 500) {
+          Taro.atMessage({
+            message: '获取列表失败',
+            type: 'error',
+          });
+        } else if (res.statusCode === 200) {
+          if (measureType === 'single') {
+            setMeasureBasicList(res.data.data);
+          } else {
+            // 设置三个数组
+            setFat(res.data.data.fat);
+            setSugar(res.data.data.sugar);
+            setUric(res.data.data.uric);
+          }
+        }
+
+        setGetDataLoading(false);
+        setIsNeedRefresh(false);
+      }
     })();
-  }, [timeSpanIndex]);
+  }, [timeSpanIndex, isNeedRefresh]);
+
+  useEffect(() => {
+    if (isAdded) {
+      setIsNeedRefresh(true);
+      dispatch(addMeasureData(false));
+    }
+  }, [isAdded, dispatch]);
 
   return (
     <View>
@@ -83,22 +106,34 @@ const Line = () => {
         text="患者健康数据加载中..."
       />
       {/* FIXME: 多一个自定义时间,点到自定义时间时就多出一个Picker */}
-      <Picker
+      {/* <Picker
         mode="selector"
         range={TIME_RANGE}
         onChange={(e) => {
           setTimeSpanIndex(+e.detail.value);
         }}
         value={timeSpanIndex}
-      >
-        <AtList>
-          <AtListItem
-            title="时间段选择："
-            extraText={TIME_RANGE[timeSpanIndex]}
-            arrow="right"
-          />
-        </AtList>
-      </Picker>
+      > */}
+      <AtList>
+        <Picker
+          mode="selector"
+          range={TIME_RANGE}
+          onChange={(e) => {
+            setTimeSpanIndex(+e.detail.value);
+          }}
+          value={timeSpanIndex}
+        >
+          <View style='padding: 30rpx 0 0 0'>
+            <AtListItem
+              title="时间段选择："
+              extraText={TIME_RANGE[timeSpanIndex]}
+              arrow="right"
+              hasBorder={false}
+            />
+          </View>
+        </Picker>
+      </AtList>
+      {/* </Picker> */}
       {measureType === 'single' ? (
         <View className="line-box">
           <View className="line-title">尿酸</View>
@@ -122,6 +157,7 @@ const Line = () => {
                 {
                   data: measureBasicList,
                   type: 'line',
+                  connectNulls: true,
                 },
               ],
               animation: false,
@@ -153,6 +189,7 @@ const Line = () => {
                 {
                   data: uric,
                   type: 'line',
+                  connectNulls: true,
                 },
               ],
               animation: false,
@@ -179,6 +216,7 @@ const Line = () => {
                 {
                   data: fat,
                   type: 'line',
+                  connectNulls: true,
                 },
               ],
               animation: false,
@@ -205,6 +243,7 @@ const Line = () => {
                 {
                   data: sugar,
                   type: 'line',
+                  connectNulls: true,
                 },
               ],
               animation: false,

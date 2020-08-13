@@ -12,6 +12,7 @@ import aim from '../../../../assets/icon/aim.png';
 import bar from '../../../../assets/icon/bar.png';
 import clock from '../../../../assets/icon/clock.png';
 import doctor from '../../../../assets/icon/doctor.png';
+import waiting from '../../../../assets/icon/waiting.png';
 
 import { MEASURE_LATEST } from '../../../../constants/api-constants';
 import http from '../../../../util/http';
@@ -160,10 +161,10 @@ const Preview = () => {
             image: doctor,
             value: '选择医生',
           },
-          // {
-          //   image: config,
-          //   value: '设备设置',
-          // },
+          {
+            image: waiting,
+            value: '敬请期待',
+          },
         ]}
       />
     </View>

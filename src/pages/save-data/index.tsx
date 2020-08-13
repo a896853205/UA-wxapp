@@ -1,8 +1,9 @@
 import Taro, { memo, useState } from '@tarojs/taro';
 import { View, Picker } from '@tarojs/components';
-import { useSelector } from '@tarojs/redux';
+import { useSelector, useDispatch } from '@tarojs/redux';
 
 import { MEASURE_UPDATE } from '../../constants/api-constants';
+import { addMeasureData } from '../../actions/addMeasure';
 import http from '../../util/http';
 
 import { AtButton, AtInput, AtList, AtListItem, AtMessage } from 'taro-ui';
@@ -22,50 +23,57 @@ const SaveData = () => {
   const { measureType } = useSelector<IStatus, IMeasure>(
     (state) => state.measure
   );
+  const dispatch = useDispatch();
 
   const submit = async () => {
     if (!saveDataLoading) {
       setSaveDataLoading(true);
 
-      const timeData = new Date((date + ' ' + time).replace(/-/g, '/'));
-      let params;
+      if (measureType === 'single' ? uric && time && date : uric && fat && sugar && time && date) {
+        const timeData = new Date((date + ' ' + time).replace(/-/g, '/'));
+        let params;
 
-      if (measureType === 'single') {
-        params = {
-          type: measureType,
-          uric,
-          timestamp: Number(timeData),
-        };
-      } else {
-        params = {
-          type: 'triple',
-          uric,
-          fat,
-          sugar,
-          timestamp: Number(timeData),
-        };
-      }
+        if (measureType === 'single') {
+          params = {
+            type: measureType,
+            uric,
+            timestamp: Number(timeData),
+          };
+        } else {
+          params = {
+            type: 'triple',
+            uric,
+            fat,
+            sugar,
+            timestamp: Number(timeData),
+          };
+        }
 
-      const res = await http({
-        url: MEASURE_UPDATE,
-        method: 'POST',
-        data: {
-          datas: [
-            {
-              ...params,
-            },
-          ],
-        },
-      });
-
-      if (res.statusCode === 500) {
-        Taro.atMessage({
-          message: '增加失败',
-          type: 'error',
+        const res = await http({
+          url: MEASURE_UPDATE,
+          method: 'POST',
+          data: {
+            datas: [
+              {
+                ...params,
+              },
+            ],
+          },
         });
-      } else if (res.statusCode === 200) {
-        Taro.redirectTo({
-          url: '../../pages/data-detail/index?cur=0',
+
+        if (res.statusCode === 500) {
+          Taro.atMessage({
+            message: '增加失败',
+            type: 'error',
+          });
+        } else if (res.statusCode === 200) {
+          dispatch(addMeasureData(true));
+          Taro.navigateBack({});
+        }
+      } else {
+        Taro.atMessage({
+          message: '未填写完毕',
+          type: 'error',
         });
       }
 

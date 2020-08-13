@@ -71,7 +71,7 @@ const AddPatient = () => {
           type: 'error',
         });
       } else if (res.statusCode === 200) {
-        Taro.redirectTo({
+        Taro.reLaunch({
           url: '../../pages/index/index?cur=2',
         });
       }

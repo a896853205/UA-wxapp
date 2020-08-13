@@ -1,4 +1,4 @@
-import Taro, { useState, memo, useRouter } from '@tarojs/taro';
+import Taro, { useState, memo, useRouter, useEffect } from '@tarojs/taro';
 import { View } from '@tarojs/components';
 import { AtTabBar } from 'taro-ui';
 
@@ -32,6 +32,10 @@ const Index = () => {
   if (tabCur === -1 && router.params.cur !== undefined) {
     setTabCur(Number.parseInt(router.params.cur));
   }
+
+  useEffect(() => {
+    Taro.hideHomeButton();
+  }, []);
 
   return (
     <View>

@@ -3,8 +3,9 @@
 import Taro, { memo, useState, useEffect } from '@tarojs/taro';
 import { View, Text, Picker } from '@tarojs/components';
 import { AtIcon, AtList, AtListItem, AtToast, AtButton } from 'taro-ui';
-import { useSelector } from '@tarojs/redux';
+import { useSelector, useDispatch } from '@tarojs/redux';
 import Chart from 'taro-echarts';
+import { addMeasureData } from '../../../actions/addMeasure';
 
 import {
   CHART_PIE,
@@ -21,6 +22,13 @@ interface IStatus {
   measure: IMeasure;
 }
 
+interface IAdd {
+  isAdded: boolean;
+}
+interface Istatus {
+  addMeasure: IAdd;
+}
+
 const TIME_RANGE = ['过去一周', '过去一个月'];
 
 const Analysis = () => {
@@ -29,43 +37,58 @@ const Analysis = () => {
   const [sugar, setSugar] = useState<any>([]);
   const [uric, setUric] = useState<any>([]);
   const [singleSugar, setSingleSugar] = useState<any>([]);
+  const [isNeedRefresh, setIsNeedRefresh] = useState(true);
   const [getDataLoading, setGetDataLoading] = useState(false);
   const { measureType } = useSelector<IStatus, IMeasure>(
     (state) => state.measure
   );
+  const { isAdded } = useSelector<Istatus, IAdd>(
+    (state) => state.addMeasure
+  );
+  const dispatch = useDispatch();
 
   useEffect(() => {
     (async () => {
-      setGetDataLoading(true);
+      if (isNeedRefresh) {
+        setGetDataLoading(true);
 
-      const res = await http({
-        url: CHART_PIE,
-        method: 'GET',
-        data: {
-          type: measureType === 'single' ? measureType : 'triple',
-          days: timeSpanIndex ? 30 : 7
-        }
-      });
-
-      if (res.statusCode === 500) {
-        Taro.atMessage({
-          message: '获取列表失败',
-          type: 'error',
+        const res = await http({
+          url: CHART_PIE,
+          method: 'GET',
+          data: {
+            type: measureType === 'single' ? measureType : 'triple',
+            days: timeSpanIndex ? 30 : 7
+          }
         });
-      } else if (res.statusCode === 200) {
 
-        if (measureType === 'single') {
-          setSingleSugar(res.data.data)
-        } else {
-          setFat(res.data.data.fat);
-          setSugar(res.data.data.sugar);
-          setUric(res.data.data.uric);
+        if (res.statusCode === 500) {
+          Taro.atMessage({
+            message: '获取列表失败',
+            type: 'error',
+          });
+        } else if (res.statusCode === 200) {
+
+          if (measureType === 'single') {
+            setSingleSugar(res.data.data)
+          } else {
+            setFat(res.data.data.fat);
+            setSugar(res.data.data.sugar);
+            setUric(res.data.data.uric);
+          }
         }
-      }
 
-      setGetDataLoading(false);
+        setGetDataLoading(false);
+        setIsNeedRefresh(false);
+      }
     })();
-  }, [timeSpanIndex]);
+  }, [timeSpanIndex, isNeedRefresh]);
+
+  useEffect(() => {
+    if (isAdded) {
+      setIsNeedRefresh(true);
+      dispatch(addMeasureData(false));
+    }
+  }, [isAdded, dispatch]);
 
   return (
     <View>
@@ -76,22 +99,24 @@ const Analysis = () => {
         text="患者健康数据加载中..."
       />
       {/* FIXME: 多一个自定义时间,点到自定义时间时就多出一个Picker */}
-      <Picker
-        mode="selector"
-        range={TIME_RANGE}
-        onChange={(e) => {
-          setTimeSpanIndex(+e.detail.value);
-        }}
-        value={timeSpanIndex}
-      >
-        <AtList>
-          <AtListItem
-            title="时间段选择："
-            extraText={TIME_RANGE[timeSpanIndex]}
-            arrow="right"
-          />
-        </AtList>
-      </Picker>
+      <AtList>
+        <Picker
+          mode="selector"
+          range={TIME_RANGE}
+          onChange={(e) => {
+            setTimeSpanIndex(+e.detail.value);
+          }}
+          value={timeSpanIndex}
+        >
+          <View style='padding: 30rpx 0 0 0'>
+            <AtListItem
+              title="时间段选择："
+              extraText={TIME_RANGE[timeSpanIndex]}
+              arrow="right"
+            />
+          </View>
+        </Picker>
+      </AtList>
       {measureType === 'single' ? (
         <View className="analysis-box">
           <View className="analysis-title">尿酸</View>
