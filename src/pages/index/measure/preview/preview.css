@@ -9,8 +9,17 @@
 }
 
 .value-preview-box > .measure-preview {
-  color: rgb(255, 107, 132);
   font-size: 6rem;
+}
+
+.measure-red {
+  color: rgb(255, 107, 132);
+}
+.measure-green {
+  color: rgb(147, 206, 84);
+}
+.measure-bule {
+  color: #6190e8;
 }
 
 .measure-preview > .measure-unit {
@@ -28,8 +37,9 @@
 }
 
 .measure-joint-preview > .row {
+  padding: 0 40rpx;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: baseline;
   border-bottom: 1px solid #ddd;
 }
@@ -39,7 +49,7 @@
   display: block;
   color: #666;
   font-size: 0.8rem;
-  padding-right: 20rpx;
+  padding-right: 40rpx;
 }
 
 .value-num {

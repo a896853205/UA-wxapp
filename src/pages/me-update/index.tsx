@@ -2,10 +2,7 @@ import Taro, { memo, useState, useEffect } from '@tarojs/taro';
 import { View } from '@tarojs/components';
 import { AtInput, AtButton, AtMessage, AtForm, AtToast } from 'taro-ui';
 
-import {
-  ME,
-  ME_UPDATE
-} from '../../constants/api-constants';
+import { ME, ME_UPDATE } from '../../constants/api-constants';
 import http from '../../util/http';
 
 const AddPatient = () => {
@@ -99,6 +96,7 @@ const AddPatient = () => {
       <AtMessage />
       <AtForm onSubmit={submit}>
         <AtInput
+          required
           name="name"
           title="姓名"
           type="text"
@@ -109,6 +107,7 @@ const AddPatient = () => {
           }}
         />
         <AtInput
+          required
           name="phone"
           title="手机号"
           type="number"
@@ -119,6 +118,7 @@ const AddPatient = () => {
           }}
         />
         <AtInput
+          required
           name="identity"
           title="身份证号"
           type="text"
@@ -177,7 +177,6 @@ const AddPatient = () => {
         >
           保存
         </AtButton>
-
       </AtForm>
     </View>
   );

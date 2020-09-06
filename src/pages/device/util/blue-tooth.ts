@@ -53,6 +53,7 @@ export const openBluetoothAdapter = () => {
           });
           // state: 4, errCode: 10001
         }
+        reject();
       },
     });
   });

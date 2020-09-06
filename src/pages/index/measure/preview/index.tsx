@@ -28,9 +28,33 @@ const Preview = () => {
   const [tripleMeasure, setTripleMeasure] = useState<any>([]);
   const [singleUric, setSingleUric] = useState<any>([]);
   const [getDataLoading, setGetDataLoading] = useState(false);
+  const [level, setLevel] = useState<{
+    uric: string;
+    sugar: string;
+    fat: string;
+  }>();
   const { measureType } = useSelector<IStatus, IMeasure>(
     (state) => state.measure
   );
+
+  const [uricLast, setUricLast] = useState(0);
+  const [TUircLast, setTUircLast] = useState(0);
+  const [fatLast, setFatLast] = useState(0);
+  const [sugarLast, setSugarLast] = useState(0);
+
+  const measureClass = (levelString?: string) => {
+    switch (levelString) {
+      case 'high':
+        return 'measure-red';
+      case 'normal':
+        return 'measure-green';
+      case 'low':
+        return 'measure-blue';
+
+      default:
+        return 'measure-green';
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -51,10 +75,15 @@ const Preview = () => {
         });
       } else if (res.statusCode === 200) {
         if (measureType === 'single') {
-          setSingleUric(res.data.data);
+          setSingleUric(res.data.data.measure);
+          setUricLast(res.data.data.last.uric);
         } else {
-          setTripleMeasure(res.data.data);
+          setTripleMeasure(res.data.data.measure);
+          setTUircLast(res.data.data.last.uric);
+          setFatLast(res.data.data.last.uric);
+          setSugarLast(res.data.data.last.uric);
         }
+        setLevel(res.data.data.level);
       }
 
       setGetDataLoading(false);
@@ -73,11 +102,14 @@ const Preview = () => {
       {measureType === 'single' ? (
         <View className="value-preview-box">
           <View className="measure-preview">
-            {singleUric.uric}
+            <Text className={measureClass(level ? level.uric : '')}>
+              {singleUric.uric}
+            </Text>
+
             <Text className="measure-unit">μmol/L</Text>
           </View>
           <View className="measure-description">
-            连续<Text className="day">10</Text>天高于目标值
+            连续<Text className="day">{uricLast}</Text>次高于目标值
           </View>
         </View>
       ) : null}
@@ -87,31 +119,45 @@ const Preview = () => {
           <View className="row">
             <Text className="measure-project">尿酸</Text>
             <Text className="measure-value">
-              <Text className="value-num">{tripleMeasure.uric}</Text>
+              <Text
+                className={`value-num ${measureClass(level ? level.uric : '')}`}
+              >
+                {tripleMeasure.uric}
+              </Text>
               <Text className="measure-unit">μmol/L</Text>
             </Text>
             <Text>
-              <Text className="day">10</Text>天
+              <Text className="day">{TUircLast}</Text>次
             </Text>
           </View>
           <View className="row">
             <Text className="measure-project">血脂</Text>
             <Text className="measure-value">
-              <Text className="value-num">{tripleMeasure.fat}</Text>
+              <Text
+                className={`value-num ${measureClass(level ? level.fat : '')}`}
+              >
+                {tripleMeasure.fat}
+              </Text>
               <Text className="measure-unit">mmol/L</Text>
             </Text>
             <Text>
-              <Text className="day">10</Text>天
+              <Text className="day">{fatLast}</Text>次
             </Text>
           </View>
           <View className="row">
             <Text className="measure-project">血糖</Text>
             <Text className="measure-value">
-              <Text className="value-num">{tripleMeasure.sugar}</Text>
+              <Text
+                className={`value-num ${measureClass(
+                  level ? level.sugar : ''
+                )}`}
+              >
+                {tripleMeasure.sugar}
+              </Text>
               <Text className="measure-unit">mmol/L</Text>
             </Text>
             <Text>
-              <Text className="day">10</Text>天
+              <Text className="day">{sugarLast}</Text>次
             </Text>
           </View>
         </View>

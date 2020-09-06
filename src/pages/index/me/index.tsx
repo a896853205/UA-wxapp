@@ -82,7 +82,7 @@ const Me = () => {
             </Text>
           </View>
         </View>
-        <View className="me-item">
+        {/* <View className="me-item">
           <View className="item-title">健康档案</View>
           <View className="item-list">
             <View className="item-cell">
@@ -99,7 +99,7 @@ const Me = () => {
               <View className="item-name">亲友列表</View>
             </View>
           </View>
-        </View>
+        </View> */}
       </View>
     </View>
   );

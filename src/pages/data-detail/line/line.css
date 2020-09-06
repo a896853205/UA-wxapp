@@ -8,4 +8,6 @@
   border-left: 5rpx solid #6190e8;
   padding-left: 20rpx;
   margin-top: 10rpx;
+  display: flex;
+  justify-content: space-between;
 }

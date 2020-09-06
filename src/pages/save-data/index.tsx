@@ -1,4 +1,4 @@
-import Taro, { memo, useState } from '@tarojs/taro';
+import Taro, { memo, useState, useEffect } from '@tarojs/taro';
 import { View, Picker } from '@tarojs/components';
 import { useSelector, useDispatch } from '@tarojs/redux';
 
@@ -20,6 +20,7 @@ const SaveData = () => {
   const [sugar, setSugar] = useState(0);
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
+  const [isToday, setIsToday] = useState(false);
   const { measureType } = useSelector<IStatus, IMeasure>(
     (state) => state.measure
   );
@@ -29,7 +30,11 @@ const SaveData = () => {
     if (!saveDataLoading) {
       setSaveDataLoading(true);
 
-      if (measureType === 'single' ? uric && time && date : uric && fat && sugar && time && date) {
+      if (
+        measureType === 'single'
+          ? uric && time && date
+          : uric && fat && sugar && time && date
+      ) {
         const timeData = new Date((date + ' ' + time).replace(/-/g, '/'));
         let params;
 
@@ -53,6 +58,7 @@ const SaveData = () => {
           url: MEASURE_UPDATE,
           method: 'POST',
           data: {
+            source: 2,
             datas: [
               {
                 ...params,
@@ -81,6 +87,15 @@ const SaveData = () => {
     }
   };
 
+  useEffect(() => {
+    if (date.split('-')[2]) {
+      if (new Date().getDate() === Number(date.split('-')[2])) setIsToday(true);
+      else setIsToday(false);
+    } else setIsToday(false);
+
+    setTime('');
+  }, [date]);
+
   return (
     <View>
       <AtMessage />
@@ -98,6 +113,9 @@ const SaveData = () => {
 
           <Picker
             mode="date"
+            end={`${new Date().getFullYear()}-${
+              new Date().getMonth
+            }-${new Date().getDate()}`}
             onChange={(e) => {
               setDate(`${e.detail.value}`);
             }}
@@ -110,6 +128,11 @@ const SaveData = () => {
 
           <Picker
             mode="time"
+            end={
+              isToday
+                ? `${new Date().getHours()}:${new Date().getMinutes()}`
+                : '24:00'
+            }
             onChange={(e) => {
               setTime(`${e.detail.value}`);
             }}
