@@ -31,10 +31,11 @@ const NewsDetail = () => {
       } else if (res.statusCode === 200) {
         setArticleTitle(res.data.data.title);
         // 这里再请求一下
-        const htmlRes = await http({
+        const htmlRes = await Taro.request({
           url: res.data.data.content,
           method: 'GET',
         });
+
         setContent(htmlRes.data)
       }
 
@@ -53,6 +54,7 @@ const NewsDetail = () => {
       <AtMessage />
       {articleTitle}
       <RichText nodes={content} space="emsp" />
+      {content}
     </View>
   );
 };

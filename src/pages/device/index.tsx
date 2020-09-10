@@ -312,6 +312,11 @@ const DeviceComponent = () => {
     setDiscoveryStarted(false);
   };
 
+  const breakBlueTeeth = () => {
+    setUploadData('');
+    setSelectedDevice(undefined);
+    closeBluetoothAdapter();
+  };
   useEffect(() => {
     return () => {
       setDevices([]);
@@ -405,8 +410,10 @@ const DeviceComponent = () => {
             if (selectedDevice) {
               selectedDevice.writeBLECharacteristicValue(Device.START);
             }
-          } else {
+          } else if (index === 1) {
             submit(uploadData);
+          } else {
+            breakBlueTeeth();
           }
         }}
         data={[
@@ -416,6 +423,9 @@ const DeviceComponent = () => {
           {
             value: '上传数据到云',
           },
+          {
+            value: '断开蓝牙',
+          }
         ]}
       />
     </View>
