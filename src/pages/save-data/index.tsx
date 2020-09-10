@@ -48,7 +48,7 @@ const SaveData = () => {
         } else {
           params = {
             source: 2,
-            type: measureType,
+            type: 'triple',
             uric,
             fat,
             sugar,
