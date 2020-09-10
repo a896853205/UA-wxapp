@@ -243,13 +243,14 @@ const DeviceComponent = () => {
     } else {
       setLoadText('上传数据加载中...');
       setLoading(true);
+      let data: any = new UXSingleData(_uploadData);
+      data.source = 1;
       http({
         url: MEASURE_UPDATE,
         method: 'POST',
         data: {
           uuid: Taro.getStorageSync('activePatient'),
-          datas: [new UXSingleData(_uploadData)],
-          source: 1,
+          datas: [data],
         },
       }).then((res) => {
         console.log(res);
@@ -425,7 +426,7 @@ const DeviceComponent = () => {
           },
           {
             value: '断开蓝牙',
-          }
+          },
         ]}
       />
     </View>

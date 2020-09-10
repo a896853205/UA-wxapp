@@ -40,13 +40,15 @@ const SaveData = () => {
 
         if (measureType === 'single') {
           params = {
+            source: 2,
             type: measureType,
             uric,
             timestamp: Number(timeData),
           };
         } else {
           params = {
-            type: 'triple',
+            source: 2,
+            type: measureType,
             uric,
             fat,
             sugar,
@@ -58,7 +60,6 @@ const SaveData = () => {
           url: MEASURE_UPDATE,
           method: 'POST',
           data: {
-            source: 2,
             datas: [
               {
                 ...params,
