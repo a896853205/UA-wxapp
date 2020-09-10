@@ -54,7 +54,6 @@ const NewsDetail = () => {
       <AtMessage />
       {articleTitle}
       <RichText nodes={content} space="emsp" />
-      {content}
     </View>
   );
 };
