@@ -1,9 +1,11 @@
 import Taro, { memo, useState, useEffect } from '@tarojs/taro';
-import { View } from '@tarojs/components';
-import { AtInput, AtButton, AtMessage, AtForm, AtToast } from 'taro-ui';
+import { View, Picker } from '@tarojs/components';
+import { AtInput, AtButton, AtMessage, AtForm, AtToast, AtListItem } from 'taro-ui';
 
 import { ME, ME_UPDATE } from '../../constants/api-constants';
 import http from '../../util/http';
+
+const GENDER_SELECT = ['男', '女'];
 
 const AddPatient = () => {
   const [name, setName] = useState('');
@@ -13,6 +15,7 @@ const AddPatient = () => {
   const [relativeName, setRelativeName] = useState('');
   const [relativeRelation, setRelativeRelation] = useState('');
   const [relativePhone, setRelativePhone] = useState('');
+  const [gender, setGender] = useState(0);
   const [saveDataLoading, setSaveDataLoading] = useState(false);
   const [getDataLoading, setGetDataLoading] = useState(false);
 
@@ -27,6 +30,7 @@ const AddPatient = () => {
 
       if (res) {
         setName(res.data.data.name);
+        setGender(res.data.data.gender);
         setPhone(res.data.data.phone);
         setIdentify(res.data.data.identify);
         setAddress(res.data.data.address);
@@ -45,7 +49,7 @@ const AddPatient = () => {
 
       const params = {
         name: name,
-        gender: 1,
+        gender: gender,
         identify: identify,
         phone: phone,
         address: address,
@@ -106,6 +110,20 @@ const AddPatient = () => {
             setName(`${e}`);
           }}
         />
+        <Picker
+          mode="selector"
+          range={GENDER_SELECT}
+          onChange={(e) => {
+            setGender(+e.detail.value + 1);
+          }}
+          value={gender}
+        >
+          <AtListItem
+            title=" * 性别"
+            extraText={GENDER_SELECT[gender - 1]}
+            arrow="right"
+          />
+        </Picker>
         <AtInput
           required
           name="phone"
