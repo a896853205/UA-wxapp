@@ -37,47 +37,55 @@ const SaveData = () => {
           : uric && fat && sugar && time && date
       ) {
         const timeData = new Date((date + ' ' + time).replace(/-/g, '/'));
-        let params;
-
-        if (measureType === 'single') {
-          params = {
-            source: 2,
-            type: measureType,
-            uric,
-            timestamp: Number(timeData),
-          };
-        } else {
-          params = {
-            source: 2,
-            type: 'triple',
-            uric,
-            fat,
-            sugar,
-            timestamp: Number(timeData),
-          };
-        }
-
-        const res = await http({
-          url: MEASURE_UPDATE,
-          method: 'POST',
-          data: {
-            datas: [
-              {
-                ...params,
-              },
-            ],
-          },
-        });
-
-        if (res.statusCode === 500) {
+        const now = new Date();
+        if (timeData > now) {
           Taro.atMessage({
-            message: '增加失败',
+            message: '超出当前时间',
             type: 'error',
           });
-        } else if (res.statusCode === 200) {
-          dispatch(addLatestMeasure(true));
-          dispatch(addMeasureData(true));
-          Taro.navigateBack({});
+        } else {
+          let params;
+
+          if (measureType === 'single') {
+            params = {
+              source: 2,
+              type: measureType,
+              uric,
+              timestamp: Number(timeData),
+            };
+          } else {
+            params = {
+              source: 2,
+              type: 'triple',
+              uric,
+              fat,
+              sugar,
+              timestamp: Number(timeData),
+            };
+          }
+
+          const res = await http({
+            url: MEASURE_UPDATE,
+            method: 'POST',
+            data: {
+              datas: [
+                {
+                  ...params,
+                },
+              ],
+            },
+          });
+
+          if (res.statusCode === 500) {
+            Taro.atMessage({
+              message: '增加失败',
+              type: 'error',
+            });
+          } else if (res.statusCode === 200) {
+            dispatch(addLatestMeasure(true));
+            dispatch(addMeasureData(true));
+            Taro.navigateBack({});
+          }
         }
       } else {
         Taro.atMessage({
@@ -116,9 +124,8 @@ const SaveData = () => {
 
           <Picker
             mode="date"
-            end={`${new Date().getFullYear()}-${
-              new Date().getMonth
-            }-${new Date().getDate()}`}
+            end={`${new Date().getFullYear()}-${new Date().getMonth
+              }-${new Date().getDate()}`}
             onChange={(e) => {
               setDate(`${e.detail.value}`);
             }}
