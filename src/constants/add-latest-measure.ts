@@ -1,0 +1,1 @@
+export const ADD_LATEST_MEASURE = 'ADD_LATEST_MEASURE';

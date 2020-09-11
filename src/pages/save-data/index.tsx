@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from '@tarojs/redux';
 
 import { MEASURE_UPDATE } from '../../constants/api-constants';
 import { addMeasureData } from '../../actions/addMeasure';
+import { addLatestMeasure } from '../../actions/add-latest-measure';
 import http from '../../util/http';
 
 import { AtButton, AtInput, AtList, AtListItem, AtMessage } from 'taro-ui';
@@ -74,6 +75,7 @@ const SaveData = () => {
             type: 'error',
           });
         } else if (res.statusCode === 200) {
+          dispatch(addLatestMeasure(true));
           dispatch(addMeasureData(true));
           Taro.navigateBack({});
         }

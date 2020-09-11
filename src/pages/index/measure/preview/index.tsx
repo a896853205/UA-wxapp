@@ -1,6 +1,8 @@
 import Taro, { memo, useState, useEffect } from '@tarojs/taro';
 import { View, Text } from '@tarojs/components';
-import { useSelector } from '@tarojs/redux';
+import { useSelector, useDispatch } from '@tarojs/redux';
+
+import { addLatestMeasure } from '../../../../actions/add-latest-measure';
 
 // 样式
 import { AtGrid, AtToast } from 'taro-ui';
@@ -24,6 +26,13 @@ interface IStatus {
   measure: IMeasure;
 }
 
+interface IAddLatest {
+  isAdded: boolean;
+}
+interface Istatus {
+  addLatestMeasure: IAddLatest;
+}
+
 const Preview = () => {
   const [tripleMeasure, setTripleMeasure] = useState<any>([]);
   const [singleUric, setSingleUric] = useState<any>([]);
@@ -36,11 +45,14 @@ const Preview = () => {
   const { measureType } = useSelector<IStatus, IMeasure>(
     (state) => state.measure
   );
+  const { isAdded } = useSelector<Istatus, IAddLatest>((state) => state.addLatestMeasure);
+  const dispatch = useDispatch();
 
   const [uricLast, setUricLast] = useState(0);
   const [TUircLast, setTUircLast] = useState(0);
   const [fatLast, setFatLast] = useState(0);
   const [sugarLast, setSugarLast] = useState(0);
+  const [isNeedRefresh, setIsNeedRefresh] = useState(true);
 
   const measureClass = (levelString?: string) => {
     switch (levelString) {
@@ -58,37 +70,47 @@ const Preview = () => {
 
   useEffect(() => {
     (async () => {
-      setGetDataLoading(true);
+      if (isNeedRefresh) {
+        setGetDataLoading(true);
 
-      const res = await http({
-        url: MEASURE_LATEST,
-        method: 'GET',
-        data: {
-          type: measureType === 'single' ? measureType : 'triple',
-        },
-      });
-
-      if (res.statusCode === 500) {
-        Taro.atMessage({
-          message: '获取列表失败',
-          type: 'error',
+        const res = await http({
+          url: MEASURE_LATEST,
+          method: 'GET',
+          data: {
+            type: measureType === 'single' ? measureType : 'triple',
+          },
         });
-      } else if (res.statusCode === 200) {
-        if (measureType === 'single') {
-          setSingleUric(res.data.data.measure);
-          setUricLast(res.data.data.last.uric);
-        } else {
-          setTripleMeasure(res.data.data.measure);
-          setTUircLast(res.data.data.last.uric);
-          setFatLast(res.data.data.last.uric);
-          setSugarLast(res.data.data.last.uric);
-        }
-        setLevel(res.data.data.level);
-      }
 
-      setGetDataLoading(false);
+        if (res.statusCode === 500) {
+          Taro.atMessage({
+            message: '获取列表失败',
+            type: 'error',
+          });
+        } else if (res.statusCode === 200) {
+          if (measureType === 'single') {
+            setSingleUric(res.data.data.measure);
+            setUricLast(res.data.data.last.uric);
+          } else {
+            setTripleMeasure(res.data.data.measure);
+            setTUircLast(res.data.data.last.uric);
+            setFatLast(res.data.data.last.uric);
+            setSugarLast(res.data.data.last.uric);
+          }
+          setLevel(res.data.data.level);
+        }
+
+        setGetDataLoading(false);
+        setIsNeedRefresh(false);
+      }
     })();
-  }, [measureType]);
+  }, [isNeedRefresh, measureType]);
+
+  useEffect(() => {
+    if (isAdded) {
+      setIsNeedRefresh(true);
+      dispatch(addLatestMeasure(false));
+    }
+  }, [isAdded, dispatch]);
 
   return (
     <View className="page">
