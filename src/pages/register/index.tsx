@@ -53,6 +53,7 @@ const Register = () => {
           type="text"
           placeholder="患者姓名"
           value={name}
+          required
           onChange={(e) => {
             setName(`${e}`);
           }}
@@ -63,6 +64,18 @@ const Register = () => {
           type="number"
           placeholder="患者本人手机号"
           value={phone}
+          required
+          onChange={(e) => {
+            setPhone(`${e}`);
+          }}
+        />
+        <AtInput
+          name="identify"
+          title="身份证"
+          type="idcard"
+          placeholder="患者本人身份证号码"
+          value={phone}
+          required
           onChange={(e) => {
             setPhone(`${e}`);
           }}
