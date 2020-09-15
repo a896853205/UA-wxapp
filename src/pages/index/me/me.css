@@ -1,7 +1,7 @@
 .me-box {
   background: rgb(245, 245, 245);
-  height: calc(100vh - 135rpx);
-  margin-bottom: 30rpx;
+  height: calc(100vh - 135px);
+  margin-bottom: 30px;
 }
 
 .me-background {
