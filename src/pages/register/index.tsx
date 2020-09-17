@@ -8,6 +8,7 @@ import http from '../../util/http';
 const Register = () => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [idNumber, setIdNumber] = useState('');
   const [saveDataLoading, setSaveDataLoading] = useState(false);
 
   const submit = async () => {
@@ -25,6 +26,7 @@ const Register = () => {
             js_code: loginCode,
             name: name,
             phone: phone,
+            identify: idNumber,
           },
         });
 
@@ -35,7 +37,7 @@ const Register = () => {
           });
         } else if (res.statusCode === 200) {
           Taro.redirectTo({
-            url: '../../pages/index/index',
+            url: '../../pages/authority/index',
           });
         }
       }
@@ -74,10 +76,10 @@ const Register = () => {
           title="身份证"
           type="idcard"
           placeholder="患者本人身份证号码"
-          value={phone}
+          value={idNumber}
           required
           onChange={(e) => {
-            setPhone(`${e}`);
+            setIdNumber(`${e}`);
           }}
         />
         <AtButton
