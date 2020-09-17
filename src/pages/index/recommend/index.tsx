@@ -2,7 +2,7 @@ import Taro, { memo, useState, useEffect } from '@tarojs/taro';
 import { View, Swiper, SwiperItem, Image, Text } from '@tarojs/components';
 import { AtIcon, AtToast, AtMessage } from 'taro-ui';
 
-import { ARTICLE_TOP } from '../../../constants/api-constants';
+import { ARTICLE_LIST } from '../../../constants/api-constants';
 import http from '../../../util/http';
 
 import './recommend.css';
@@ -41,8 +41,12 @@ const Recommend = () => {
       setGetDataLoading(true);
 
       const res = await http({
-        url: ARTICLE_TOP,
+        url: ARTICLE_LIST,
         method: 'GET',
+        data: {
+          page: 0,
+          limit: 10,
+        }
       });
 
       if (res.statusCode === 500) {
@@ -123,7 +127,7 @@ const Recommend = () => {
               </Text>
               <Text className="recommend-item-describe">
                 <Text>尿酸管理小程序</Text>
-                <Text className="read-num">8230阅读</Text>
+                <Text className="read-num">{articleItem.reads}阅读</Text>
               </Text>
             </View>
             <Image
