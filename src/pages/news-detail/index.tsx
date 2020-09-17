@@ -1,15 +1,18 @@
 import Taro, { memo, useEffect, useState } from '@tarojs/taro';
 import { View, RichText } from '@tarojs/components';
 import { AtToast, AtMessage } from 'taro-ui';
+import { useDispatch } from '@tarojs/redux';
 
 import { ARTICLE_DETAIL } from '../../constants/api-constants';
 import http from '../../util/http';
+import { readNews } from '../../actions/read-news';
 
 const NewsDetail = () => {
   const newsIndex = Taro.getStorageSync('newsIndex');
   const [getDataLoading, setGetDataLoading] = useState(false);
   const [articleTitle, setArticleTitle] = useState();
-  const [content, setContent] = useState('')
+  const [content, setContent] = useState('');
+  const dispatch = useDispatch();
 
   useEffect(() => {
     (async () => {
@@ -29,6 +32,7 @@ const NewsDetail = () => {
           type: 'error',
         });
       } else if (res.statusCode === 200) {
+        dispatch(readNews(true));
         setArticleTitle(res.data.data.title);
         // 这里再请求一下
         const htmlRes = await Taro.request({

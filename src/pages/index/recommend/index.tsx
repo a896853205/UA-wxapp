@@ -1,6 +1,8 @@
 import Taro, { memo, useState, useEffect } from '@tarojs/taro';
 import { View, Swiper, SwiperItem, Image, Text } from '@tarojs/components';
 import { AtIcon, AtToast, AtMessage } from 'taro-ui';
+import { useSelector, useDispatch } from '@tarojs/redux';
+import { readNews } from '../../../actions/read-news';
 
 import { ARTICLE_LIST } from '../../../constants/api-constants';
 import http from '../../../util/http';
@@ -24,6 +26,13 @@ interface Recommend {
   props: IProps;
 }
 
+interface IRead {
+  isReaded: boolean;
+}
+interface Istatus {
+  readNews: IRead;
+}
+
 const Recommend = () => {
   /**
    * 指定config的类型声明为: Taro.Config
@@ -35,32 +44,47 @@ const Recommend = () => {
 
   const [getDataLoading, setGetDataLoading] = useState(false);
   const [articleList, setArticleList] = useState<any>([]);
+  const [isNeedRefresh, setIsNeedRefresh] = useState(true);
+  const { isReaded } = useSelector<Istatus, IRead>(
+    (state) => state.readNews
+  );
+  const dispatch = useDispatch();
 
   useEffect(() => {
     (async () => {
-      setGetDataLoading(true);
+      if (isNeedRefresh) {
+        setGetDataLoading(true);
 
-      const res = await http({
-        url: ARTICLE_LIST,
-        method: 'GET',
-        data: {
-          page: 0,
-          limit: 10,
-        }
-      });
-
-      if (res.statusCode === 500) {
-        Taro.atMessage({
-          message: '获取列表失败',
-          type: 'error',
+        const res = await http({
+          url: ARTICLE_LIST,
+          method: 'GET',
+          data: {
+            page: 0,
+            limit: 10,
+          }
         });
-      } else if (res.statusCode === 200) {
-        setArticleList(res.data.data.rows);
-      }
 
-      setGetDataLoading(false);
+        if (res.statusCode === 500) {
+          Taro.atMessage({
+            message: '获取列表失败',
+            type: 'error',
+          });
+        } else if (res.statusCode === 200) {
+          setArticleList(res.data.data.rows);
+        }
+
+        setGetDataLoading(false);
+        setIsNeedRefresh(false);
+      }
     })();
-  }, []);
+  }, [isNeedRefresh]);
+
+  useEffect(() => {
+    if (isReaded) {
+      setIsNeedRefresh(true);
+      dispatch(readNews(false));
+    }
+  }, [isReaded, dispatch]);
 
   return (
     <View className="recommed-box">
@@ -69,7 +93,7 @@ const Recommend = () => {
           isOpened={getDataLoading}
           hasMask
           status="loading"
-          text="医生信息加载中..."
+          text="新闻加载中..."
         />
         <AtMessage />
         <View className="recommend-title">
