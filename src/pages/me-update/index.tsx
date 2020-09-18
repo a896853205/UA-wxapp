@@ -69,7 +69,7 @@ const AddPatient = () => {
 
       if (res.statusCode === 500) {
         Taro.atMessage({
-          message: '更新失败',
+          message: res.data.msg,
           type: 'error',
         });
       } else if (res.statusCode === 200) {
