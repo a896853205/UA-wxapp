@@ -93,8 +93,8 @@ const Preview = () => {
           } else {
             setTripleMeasure(res.data.data.measure);
             setTUircLast(res.data.data.last.uric);
-            setFatLast(res.data.data.last.uric);
-            setSugarLast(res.data.data.last.uric);
+            setFatLast(res.data.data.last.fat);
+            setSugarLast(res.data.data.last.sugar);
           }
           setLevel(res.data.data.level);
         }

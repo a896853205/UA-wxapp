@@ -1,0 +1,22 @@
+.data-item-box{
+  display: flex;
+  flex-direction: column;
+  padding: 20rpx 20rpx 0 20rpx; 
+}
+
+.data-up-box{
+  display: flex;
+  flex-direction: row;
+}
+
+.up-box{
+  font-size: 34rpx;
+  padding-right: 30rpx;
+}
+
+.data-down-box{
+  color: #666;
+  font-size: 28rpx;
+  border-bottom: 1rpx solid #e4e4e4;
+  padding-bottom: 20rpx;
+}

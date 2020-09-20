@@ -120,7 +120,7 @@ const Line = () => {
             message: '获取列表失败',
             type: 'error',
           });
-        } else if (res.statusCode === 200) {      
+        } else if (res.statusCode === 200) {
           if (measureType === 'single') {
             setMeasureBasicList(res.data.data);
           } else {

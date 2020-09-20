@@ -3,6 +3,7 @@ import { View } from '@tarojs/components';
 import { AtTabBar } from 'taro-ui';
 import { useDispatch } from '@tarojs/redux';
 import { changeMeasureType } from '../../../actions/measure';
+import { addLatestMeasure } from '../../../actions/add-latest-measure';
 // 组件
 import Preview from './preview';
 import './measure.css';
@@ -41,6 +42,7 @@ const Measure = () => {
     }
 
     dispatch(changeMeasureType(measureType));
+    dispatch(addLatestMeasure(true));
   }, [tabCur]);
 
   return (
