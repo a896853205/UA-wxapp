@@ -3,6 +3,7 @@ import { View, Picker } from '@tarojs/components';
 import { AtInput, AtButton, AtMessage, AtForm, AtToast, AtListItem } from 'taro-ui';
 
 import { ME, ME_UPDATE } from '../../constants/api-constants';
+import TaroRegionPicker from '../../util/taro-region-picker';
 import http from '../../util/http';
 import './me-update.css';
 
@@ -17,6 +18,12 @@ const AddPatient = () => {
   const [relativeRelation, setRelativeRelation] = useState('');
   const [relativePhone, setRelativePhone] = useState('');
   const [gender, setGender] = useState(0);
+
+  const [region, setRegion] = useState('');
+  const [district, setDistrict] = useState('');
+  const [city, setCity] = useState('');
+  const [province, setProvince] = useState('');
+
   const [saveDataLoading, setSaveDataLoading] = useState(false);
   const [getDataLoading, setGetDataLoading] = useState(false);
 
@@ -38,6 +45,11 @@ const AddPatient = () => {
         setRelativeName(res.data.data.relative_name);
         setRelativeRelation(res.data.data.relative_relation);
         setRelativePhone(res.data.data.relative_phone);
+        if (res.data.data.province) {
+          setRegion(
+            `${res.data.data.province} - ${res.data.data.city} - ${res.data.data.district}`
+          );
+        };
       }
 
       setGetDataLoading(false);
@@ -57,6 +69,9 @@ const AddPatient = () => {
         relative_name: relativeName,
         relative_relation: relativeRelation,
         relative_phone: relativePhone,
+        district,
+        city,
+        province,
       };
 
       const res = await http({
@@ -190,6 +205,17 @@ const AddPatient = () => {
           value={relativePhone}
           onChange={(e) => {
             setRelativePhone(`${e}`);
+          }}
+        />
+        <TaroRegionPicker
+          style={{ textAlign: 'left', borderTop: 0 }}
+          regionSelf={region}
+          onGetRegion={(_region) => {
+            const re = _region.split(' - ');
+            setDistrict(re[2]);
+            setCity(re[1]);
+            setProvince(re[0]);
+            console.log(re);
           }}
         />
 

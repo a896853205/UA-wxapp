@@ -167,6 +167,7 @@ const Line = () => {
           range={TIME_RANGE}
           onChange={(e) => {
             setTimeSpanIndex(+e.detail.value);
+            dispatch(addMeasureData(true));
           }}
           value={timeSpanIndex}
         >
