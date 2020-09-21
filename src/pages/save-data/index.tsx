@@ -124,7 +124,7 @@ const SaveData = () => {
 
           <Picker
             mode="date"
-            end={`${new Date().getFullYear()}-${new Date().getMonth
+            end={`${new Date().getFullYear()}-${new Date().getMonth() + 1
               }-${new Date().getDate()}`}
             onChange={(e) => {
               setDate(`${e.detail.value}`);
