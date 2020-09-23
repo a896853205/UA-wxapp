@@ -1,6 +1,6 @@
 // TODO: 将data-detail的折线组件抽象到这里
 import Taro, { useState, memo, useEffect } from '@tarojs/taro';
-import { View, Picker, Text } from '@tarojs/components';
+import { View, Picker, Button } from '@tarojs/components';
 import {
   AtButton,
   AtList,
@@ -8,6 +8,8 @@ import {
   AtToast,
   AtModalContent,
   AtModal,
+  AtModalAction,
+  AtModalHeader,
 } from 'taro-ui';
 import { useSelector, useDispatch } from '@tarojs/redux';
 // import Chart from 'taro-echarts';
@@ -143,6 +145,16 @@ const Line = () => {
     })();
   }, [timeSpanIndex, isAdded]);
 
+  const backwardsDayInMounth = (backwardsNums: number): string => {
+    const oneDayStmp = 3600 * 24 * 1000;
+    const nowStmp = new Date().getTime();
+
+    const res = `${new Date(nowStmp - backwardsNums * oneDayStmp).getMonth() + 1}月${new Date(
+      nowStmp - backwardsNums * oneDayStmp).getDate()}日`;
+
+    return res;
+  };
+
   return (
     <View>
       <AtToast
@@ -182,37 +194,30 @@ const Line = () => {
       </AtList>
       {/* </Picker> */}
       {measureType === 'single' ? (
-        <View className="line-box" >
-          <View className="line-title">
-            <Text>尿酸</Text>
-            {/* {timeSpanIndex ? null : ( */}
-            <Text
-              onClick={() => {
-                setBaseIsOpened(true);
-              }}
-            >
-              查看详情 &gt;
-              </Text>
-            {/* )} */}
-          </View>
-          <View style={{ display: baseIsOpened ? 'none' : 'block' }}>
-            <SingleLine
-              timeSpanIndex={timeSpanIndex}
-              measureBasicList={measureBasicList}
-            />
-          </View>
-        </View>
+        <SingleLine
+          isVisible={baseIsOpened}
+          onDetailsClick={() => {
+            setBaseIsOpened(true);
+          }}
+          timeSpanIndex={timeSpanIndex}
+          measureBasicList={measureBasicList}
+        />
       ) : null}
 
-      <AtModal isOpened={baseIsOpened} onClose={() => setBaseIsOpened(false)}>
+      <AtModal
+        isOpened={baseIsOpened}
+        onClose={() => setBaseIsOpened(false)}
+      >
+        <AtModalHeader>近一{timeSpanIndex ? '个月' : '周'}尿酸数值</AtModalHeader>
         <AtModalContent>
-          <AtList>
+          <AtList hasBorder={false}>
             {timeSpanIndex ? measureBasicList.map((item, index) => {
               return (
                 <AtListItem
-                  title={`第${index + 1}天`}
+                  title={backwardsDayInMounth(29 - index)}
                   extraText={item ? `${item}` : '0'}
                   key={index}
+                  hasBorder={index == 29 ? false : true}
                 />
               )
             }) :
@@ -222,45 +227,39 @@ const Line = () => {
                     title={`星期${getCurrentWeek()[index]}`}
                     extraText={item ? `${item}` : '0'}
                     key={index}
+                    hasBorder={index == 6 ? false : true}
                   />
                 );
               })}
           </AtList>
         </AtModalContent>
+        <AtModalAction> <Button onClick={() => setBaseIsOpened(false)}>确定</Button> </AtModalAction>
       </AtModal>
 
       {measureType === 'joint' ? (
-        <View className="line-box">
-          <View className="line-title">
-            <Text>尿酸</Text>
-            {/* {timeSpanIndex ? null : ( */}
-            <Text
-              onClick={() => {
-                setUricIsOpened(true);
-              }}
-            >
-              查看详情 &gt;
-              </Text>
-            {/* )} */}
-          </View>
-          <View style={{ display: uricIsOpened || fatIsOpened || sugarIsOpened ? 'none' : 'block' }}>
-            <SingleLine
-              timeSpanIndex={timeSpanIndex}
-              measureBasicList={uric}
-            />
-          </View>
+        <View>
+          <SingleLine
+            isVisible={uricIsOpened || fatIsOpened || sugarIsOpened}
+            onDetailsClick={() => {
+              setUricIsOpened(true);
+            }}
+            timeSpanIndex={timeSpanIndex}
+            measureBasicList={uric}
+          />
           <AtModal
             isOpened={uricIsOpened}
             onClose={() => setUricIsOpened(false)}
           >
+            <AtModalHeader>近一{timeSpanIndex ? '个月' : '周'}尿酸数值</AtModalHeader>
             <AtModalContent>
-              <AtList>
+              <AtList hasBorder={false}>
                 {timeSpanIndex ? uric.map((item, index) => {
                   return (
                     <AtListItem
-                      title={`第${index + 1}天`}
+                      title={backwardsDayInMounth(29 - index)}
                       extraText={item ? `${item}` : '0'}
                       key={index}
+                      hasBorder={index == 29 ? false : true}
                     />
                   )
                 }) :
@@ -270,40 +269,36 @@ const Line = () => {
                         title={`星期${getCurrentWeek()[index]}`}
                         extraText={item ? `${item}` : '0'}
                         key={index}
+                        hasBorder={index == 6 ? false : true}
                       />
                     );
                   })}
               </AtList>
             </AtModalContent>
+            <AtModalAction> <Button onClick={() => setBaseIsOpened(false)}>确定</Button> </AtModalAction>
           </AtModal>
 
-          <View className="line-title">
-            <Text>血脂</Text>
-            {/* {timeSpanIndex ? null : ( */}
-            <Text
-              onClick={() => {
-                setFatIsOpened(true);
-              }}
-            >
-              查看详情 &gt;
-              </Text>
-            {/* )} */}
-          </View>
           <View style={{ display: uricIsOpened || fatIsOpened || sugarIsOpened ? 'none' : 'block' }}>
             <SingleLine
+              isVisible={uricIsOpened || fatIsOpened || sugarIsOpened}
+              onDetailsClick={() => {
+                setFatIsOpened(true);
+              }}
               timeSpanIndex={timeSpanIndex}
               measureBasicList={fat}
             />
           </View>
           <AtModal isOpened={fatIsOpened} onClose={() => setFatIsOpened(false)}>
+            <AtModalHeader>近一{timeSpanIndex ? '个月' : '周'}甘油三酯数值</AtModalHeader>
             <AtModalContent>
-              <AtList>
+              <AtList hasBorder={false}>
                 {timeSpanIndex ? fat.map((item, index) => {
                   return (
                     <AtListItem
-                      title={`第${index + 1}天`}
+                      title={backwardsDayInMounth(29 - index)}
                       extraText={item ? `${item}` : '0'}
                       key={index}
+                      hasBorder={index == 29 ? false : true}
                     />
                   )
                 }) : fat.map((item, index) => {
@@ -312,27 +307,21 @@ const Line = () => {
                       title={`星期${getCurrentWeek()[index]}`}
                       extraText={item ? `${item}` : '0'}
                       key={index}
+                      hasBorder={index == 6 ? false : true}
                     />
                   );
                 })}
               </AtList>
             </AtModalContent>
+            <AtModalAction> <Button onClick={() => setBaseIsOpened(false)}>确定</Button> </AtModalAction>
           </AtModal>
 
-          <View className="line-title">
-            <Text>血糖</Text>
-            {/* {timeSpanIndex ? null : ( */}
-            <Text
-              onClick={() => {
-                setSugarIsOpened(true);
-              }}
-            >
-              查看详情 &gt;
-              </Text>
-            {/* )} */}
-          </View>
           <View style={{ display: uricIsOpened || fatIsOpened || sugarIsOpened ? 'none' : 'block' }}>
             <SingleLine
+              isVisible={uricIsOpened || fatIsOpened || sugarIsOpened}
+              onDetailsClick={() => {
+                setSugarIsOpened(true);
+              }}
               timeSpanIndex={timeSpanIndex}
               measureBasicList={sugar}
             />
@@ -341,14 +330,16 @@ const Line = () => {
             isOpened={sugarIsOpened}
             onClose={() => setSugarIsOpened(false)}
           >
+            <AtModalHeader>近一{timeSpanIndex ? '个月' : '周'}血糖数值</AtModalHeader>
             <AtModalContent>
-              <AtList>
+              <AtList hasBorder={false}>
                 {timeSpanIndex ? sugar.map((item, index) => {
                   return (
                     <AtListItem
-                      title={`第${index + 1}天`}
+                      title={backwardsDayInMounth(29 - index)}
                       extraText={item ? `${item}` : '0'}
                       key={index}
+                      hasBorder={index == 29 ? false : true}
                     />
                   )
                 }) : sugar.map((item, index) => {
@@ -357,11 +348,13 @@ const Line = () => {
                       title={`星期${getCurrentWeek()[index]}`}
                       extraText={item ? `${item}` : '0'}
                       key={index}
+                      hasBorder={index == 6 ? false : true}
                     />
                   );
                 })}
               </AtList>
             </AtModalContent>
+            <AtModalAction> <Button onClick={() => setBaseIsOpened(false)}>确定</Button> </AtModalAction>
           </AtModal>
         </View>
       ) : null}
