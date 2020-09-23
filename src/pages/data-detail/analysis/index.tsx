@@ -104,6 +104,7 @@ const Analysis = () => {
           mode="selector"
           range={TIME_RANGE}
           onChange={(e) => {
+            dispatch(addMeasureData(true));
             setTimeSpanIndex(+e.detail.value);
           }}
           value={timeSpanIndex}
