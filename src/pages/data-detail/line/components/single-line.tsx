@@ -9,6 +9,7 @@ interface Props {
   measureBasicList: any[];
   isVisible: boolean;
   onDetailsClick: Function;
+  title: string;
 }
 
 const getCurrentWeek = () => {
@@ -41,11 +42,12 @@ const DataSingleLine = ({
   measureBasicList,
   isVisible,
   onDetailsClick,
+  title,
 }: Props) => {
   return (
     <View className="line-box" >
       <View className="line-title">
-        <Text>尿酸</Text>
+        <Text>{title}</Text>
         {/* {timeSpanIndex ? null : ( */}
         <Text
           onClick={() => {

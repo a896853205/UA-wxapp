@@ -195,6 +195,7 @@ const Line = () => {
       {/* </Picker> */}
       {measureType === 'single' ? (
         <SingleLine
+          title='尿酸'
           isVisible={baseIsOpened}
           onDetailsClick={() => {
             setBaseIsOpened(true);
@@ -239,6 +240,7 @@ const Line = () => {
       {measureType === 'joint' ? (
         <View>
           <SingleLine
+            title='尿酸'
             isVisible={uricIsOpened || fatIsOpened || sugarIsOpened}
             onDetailsClick={() => {
               setUricIsOpened(true);
@@ -275,19 +277,18 @@ const Line = () => {
                   })}
               </AtList>
             </AtModalContent>
-            <AtModalAction> <Button onClick={() => setBaseIsOpened(false)}>确定</Button> </AtModalAction>
+            <AtModalAction> <Button onClick={() => setUricIsOpened(false)}>确定</Button> </AtModalAction>
           </AtModal>
 
-          <View style={{ display: uricIsOpened || fatIsOpened || sugarIsOpened ? 'none' : 'block' }}>
-            <SingleLine
-              isVisible={uricIsOpened || fatIsOpened || sugarIsOpened}
-              onDetailsClick={() => {
-                setFatIsOpened(true);
-              }}
-              timeSpanIndex={timeSpanIndex}
-              measureBasicList={fat}
-            />
-          </View>
+          <SingleLine
+            title='甘油三酯'
+            isVisible={uricIsOpened || fatIsOpened || sugarIsOpened}
+            onDetailsClick={() => {
+              setFatIsOpened(true);
+            }}
+            timeSpanIndex={timeSpanIndex}
+            measureBasicList={fat}
+          />
           <AtModal isOpened={fatIsOpened} onClose={() => setFatIsOpened(false)}>
             <AtModalHeader>近一{timeSpanIndex ? '个月' : '周'}甘油三酯数值</AtModalHeader>
             <AtModalContent>
@@ -313,19 +314,18 @@ const Line = () => {
                 })}
               </AtList>
             </AtModalContent>
-            <AtModalAction> <Button onClick={() => setBaseIsOpened(false)}>确定</Button> </AtModalAction>
+            <AtModalAction> <Button onClick={() => setFatIsOpened(false)}>确定</Button> </AtModalAction>
           </AtModal>
 
-          <View style={{ display: uricIsOpened || fatIsOpened || sugarIsOpened ? 'none' : 'block' }}>
-            <SingleLine
-              isVisible={uricIsOpened || fatIsOpened || sugarIsOpened}
-              onDetailsClick={() => {
-                setSugarIsOpened(true);
-              }}
-              timeSpanIndex={timeSpanIndex}
-              measureBasicList={sugar}
-            />
-          </View>
+          <SingleLine
+            title='血糖'
+            isVisible={uricIsOpened || fatIsOpened || sugarIsOpened}
+            onDetailsClick={() => {
+              setSugarIsOpened(true);
+            }}
+            timeSpanIndex={timeSpanIndex}
+            measureBasicList={sugar}
+          />
           <AtModal
             isOpened={sugarIsOpened}
             onClose={() => setSugarIsOpened(false)}
@@ -354,7 +354,7 @@ const Line = () => {
                 })}
               </AtList>
             </AtModalContent>
-            <AtModalAction> <Button onClick={() => setBaseIsOpened(false)}>确定</Button> </AtModalAction>
+            <AtModalAction> <Button onClick={() => setSugarIsOpened(false)}>确定</Button> </AtModalAction>
           </AtModal>
         </View>
       ) : null}
