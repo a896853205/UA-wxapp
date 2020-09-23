@@ -195,6 +195,8 @@ const SaveData = () => {
 
           <Picker
             mode="date"
+            end={`${new Date().getFullYear()}-${new Date().getMonth() + 1
+              }-${new Date().getDate()}`}
             onChange={(e) => {
               setDate(`${e.detail.value}`);
             }}
@@ -207,6 +209,11 @@ const SaveData = () => {
 
           <Picker
             mode="time"
+            end={
+              isToday
+                ? `${new Date().getHours()}:${new Date().getMinutes()}`
+                : '24:00'
+            }
             onChange={(e) => {
               setTime(`${e.detail.value}`);
             }}

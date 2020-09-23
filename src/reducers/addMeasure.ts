@@ -1,7 +1,7 @@
 import { ADD_MEASURE_DATA } from '../constants/addMeasure';
 
 const INITIAL_STATE = {
-  isAdded: false,
+  isAdded: true,
 };
 
 export default (state = INITIAL_STATE, action) => {

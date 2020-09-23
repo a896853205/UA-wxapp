@@ -10,11 +10,12 @@ import {
   AtModal,
 } from 'taro-ui';
 import { useSelector, useDispatch } from '@tarojs/redux';
-import Chart from 'taro-echarts';
+// import Chart from 'taro-echarts';
 
-import { ME, CHART_LINE } from '../../../constants/api-constants';
+import { CHART_LINE } from '../../../constants/api-constants';
 import http from '../../../util/http';
 import { addMeasureData } from '../../../actions/addMeasure';
+import SingleLine from './components/single-line';
 
 import './line.css';
 
@@ -52,21 +53,21 @@ const Line = () => {
   const [fat, setFat] = useState<any>([]);
   const [sugar, setSugar] = useState<any>([]);
   const [uric, setUric] = useState<any>([]);
-  const [isNeedRefresh, setIsNeedRefresh] = useState(true);
+  // const [isNeedRefresh, setIsNeedRefresh] = useState(true);
 
   const [baseIsOpened, setBaseIsOpened] = useState(false);
   const [uricIsOpened, setUricIsOpened] = useState(false);
   const [fatIsOpened, setFatIsOpened] = useState(false);
   const [sugarIsOpened, setSugarIsOpened] = useState(false);
 
-  const [singleUricHigh, setSingleUricHigh] = useState('');
-  const [singleUricLow, setSingleUricLow] = useState('');
-  const [uricHigh, setUricHigh] = useState('');
-  const [uricLow, setUricLow] = useState('');
-  const [sugarHigh, setSugarHigh] = useState('');
-  const [sugarLow, setSugarLow] = useState('');
-  const [fatHigh, setFatHigh] = useState('');
-  const [fatLow, setFatLow] = useState('');
+  // const [singleUricHigh, setSingleUricHigh] = useState('');
+  // const [singleUricLow, setSingleUricLow] = useState('');
+  // const [uricHigh, setUricHigh] = useState('');
+  // const [uricLow, setUricLow] = useState('');
+  // const [sugarHigh, setSugarHigh] = useState('');
+  // const [sugarLow, setSugarLow] = useState('');
+  // const [fatHigh, setFatHigh] = useState('');
+  // const [fatLow, setFatLow] = useState('');
 
   const { measureType } = useSelector<IStatus, IMeasure>(
     (state) => state.measure
@@ -75,35 +76,39 @@ const Line = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    (async () => {
-      setGetDataLoading(true);
+    dispatch(addMeasureData(true));
+  }, [])
 
-      const res = await http({
-        url: ME,
-        method: 'GET',
-      });
+  // useEffect(() => {
+  //   (async () => {
+  //     setGetDataLoading(true);
 
-      if (res) {
-        if (measureType === 'single') {
-          setSingleUricHigh(res.data.data.uric_high.toString());
-          setSingleUricLow(res.data.data.uric_low.toString());
-        } else {
-          setUricHigh(res.data.data.uric_high.toString());
-          setUricLow(res.data.data.uric_low.toString());
-          setSugarHigh(res.data.data.sugar_high.toString());
-          setSugarLow(res.data.data.sugar_low.toString());
-          setFatHigh(res.data.data.fat_high.toString());
-          setFatLow(res.data.data.fat_low.toString());
-        }
-      }
+  //     const res = await http({
+  //       url: ME,
+  //       method: 'GET',
+  //     });
 
-      setGetDataLoading(false);
-    })();
-  }, []);
+  //     if (res) {
+  //       if (measureType === 'single') {
+  //         setSingleUricHigh(res.data.data.uric_high.toString());
+  //         setSingleUricLow(res.data.data.uric_low.toString());
+  //       } else {
+  //         setUricHigh(res.data.data.uric_high.toString());
+  //         setUricLow(res.data.data.uric_low.toString());
+  //         setSugarHigh(res.data.data.sugar_high.toString());
+  //         setSugarLow(res.data.data.sugar_low.toString());
+  //         setFatHigh(res.data.data.fat_high.toString());
+  //         setFatLow(res.data.data.fat_low.toString());
+  //       }
+  //     }
+
+  //     setGetDataLoading(false);
+  //   })();
+  // }, []);
 
   useEffect(() => {
     (async () => {
-      if (isNeedRefresh) {
+      if (isAdded && !getDataLoading) {
         setGetDataLoading(true);
 
         const res = await http({
@@ -132,17 +137,11 @@ const Line = () => {
         }
 
         setGetDataLoading(false);
-        setIsNeedRefresh(false);
+        dispatch(addMeasureData(false));
+        // setIsNeedRefresh(false);
       }
     })();
-  }, [timeSpanIndex, isNeedRefresh]);
-
-  useEffect(() => {
-    if (isAdded) {
-      setIsNeedRefresh(true);
-      dispatch(addMeasureData(false));
-    }
-  }, [isAdded, dispatch]);
+  }, [timeSpanIndex, isAdded]);
 
   return (
     <View>
@@ -183,64 +182,49 @@ const Line = () => {
       </AtList>
       {/* </Picker> */}
       {measureType === 'single' ? (
-        <View className="line-box">
+        <View className="line-box" >
           <View className="line-title">
             <Text>尿酸</Text>
-            {timeSpanIndex ? null : (
-              <Text
-                onClick={() => {
-                  setBaseIsOpened(true);
-                }}
-              >
-                查看详情 &gt;
+            {/* {timeSpanIndex ? null : ( */}
+            <Text
+              onClick={() => {
+                setBaseIsOpened(true);
+              }}
+            >
+              查看详情 &gt;
               </Text>
-            )}
+            {/* )} */}
           </View>
-          <Chart
-            chartId={'1'}
-            option={{
-              markLine: {
-                data: [{ data: singleUricHigh }, { data: singleUricLow }],
-              },
-              grid: {
-                left: '50px',
-                right: '50px',
-              },
-              xAxis: {
-                type: 'category',
-                data: timeSpanIndex ? new Array(30).fill('') : getCurrentWeek(),
-                name: timeSpanIndex ? '天' : '星期',
-              },
-              yAxis: {
-                type: 'value',
-                name: 'μmol/L',
-              },
-              series: [
-                {
-                  data: measureBasicList,
-                  type: 'line',
-                  connectNulls: true,
-                  itemStyle: { normal: { label: { show: !timeSpanIndex } } },
-                },
-              ],
-              animation: false,
-            }}
-          />
+          <View style={{ display: baseIsOpened ? 'none' : 'block' }}>
+            <SingleLine
+              timeSpanIndex={timeSpanIndex}
+              measureBasicList={measureBasicList}
+            />
+          </View>
         </View>
       ) : null}
 
       <AtModal isOpened={baseIsOpened} onClose={() => setBaseIsOpened(false)}>
         <AtModalContent>
           <AtList>
-            {measureBasicList.map((item, index) => {
+            {timeSpanIndex ? measureBasicList.map((item, index) => {
               return (
                 <AtListItem
-                  title={`星期${getCurrentWeek()[index]}`}
+                  title={`第${index + 1}天`}
                   extraText={item ? `${item}` : '0'}
                   key={index}
                 />
-              );
-            })}
+              )
+            }) :
+              measureBasicList.map((item, index) => {
+                return (
+                  <AtListItem
+                    title={`星期${getCurrentWeek()[index]}`}
+                    extraText={item ? `${item}` : '0'}
+                    key={index}
+                  />
+                );
+              })}
           </AtList>
         </AtModalContent>
       </AtModal>
@@ -249,111 +233,80 @@ const Line = () => {
         <View className="line-box">
           <View className="line-title">
             <Text>尿酸</Text>
-            {timeSpanIndex ? null : (
-              <Text
-                onClick={() => {
-                  setUricIsOpened(true);
-                }}
-              >
-                查看详情 &gt;
+            {/* {timeSpanIndex ? null : ( */}
+            <Text
+              onClick={() => {
+                setUricIsOpened(true);
+              }}
+            >
+              查看详情 &gt;
               </Text>
-            )}
+            {/* )} */}
           </View>
-          <Chart
-            chartId={'1'}
-            option={{
-              markLine: {
-                data: [{ data: uricHigh }, { data: uricLow }],
-              },
-              grid: {
-                left: '50px',
-                right: '50px',
-              },
-              xAxis: {
-                type: 'category',
-                data: timeSpanIndex ? new Array(30).fill('') : getCurrentWeek(),
-                name: timeSpanIndex ? '天' : '星期',
-              },
-              yAxis: {
-                type: 'value',
-                name: 'μmol/L',
-              },
-              series: [
-                {
-                  data: uric,
-                  type: 'line',
-                  connectNulls: true,
-                },
-              ],
-              animation: false,
-            }}
-          />
-
+          <View style={{ display: uricIsOpened || fatIsOpened || sugarIsOpened ? 'none' : 'block' }}>
+            <SingleLine
+              timeSpanIndex={timeSpanIndex}
+              measureBasicList={uric}
+            />
+          </View>
           <AtModal
             isOpened={uricIsOpened}
             onClose={() => setUricIsOpened(false)}
           >
             <AtModalContent>
               <AtList>
-                {uric.map((item, index) => {
+                {timeSpanIndex ? uric.map((item, index) => {
                   return (
                     <AtListItem
-                      title={`星期${getCurrentWeek()[index]}`}
+                      title={`第${index + 1}天`}
                       extraText={item ? `${item}` : '0'}
                       key={index}
                     />
-                  );
-                })}
+                  )
+                }) :
+                  uric.map((item, index) => {
+                    return (
+                      <AtListItem
+                        title={`星期${getCurrentWeek()[index]}`}
+                        extraText={item ? `${item}` : '0'}
+                        key={index}
+                      />
+                    );
+                  })}
               </AtList>
             </AtModalContent>
           </AtModal>
 
           <View className="line-title">
             <Text>血脂</Text>
-            {timeSpanIndex ? null : (
-              <Text
-                onClick={() => {
-                  setFatIsOpened(true);
-                }}
-              >
-                查看详情 &gt;
+            {/* {timeSpanIndex ? null : ( */}
+            <Text
+              onClick={() => {
+                setFatIsOpened(true);
+              }}
+            >
+              查看详情 &gt;
               </Text>
-            )}
+            {/* )} */}
           </View>
-          <Chart
-            chartId={'1'}
-            option={{
-              markLine: {
-                data: [{ data: fatHigh }, { data: fatLow }],
-              },
-              grid: {
-                left: '50px',
-                right: '50px',
-              },
-              xAxis: {
-                type: 'category',
-                data: timeSpanIndex ? new Array(30).fill('') : getCurrentWeek(),
-                name: timeSpanIndex ? '天' : '星期',
-              },
-              yAxis: {
-                type: 'value',
-                name: 'mmol/L',
-              },
-              series: [
-                {
-                  data: fat,
-                  type: 'line',
-                  connectNulls: true,
-                },
-              ],
-              animation: false,
-            }}
-          />
-
+          <View style={{ display: uricIsOpened || fatIsOpened || sugarIsOpened ? 'none' : 'block' }}>
+            <SingleLine
+              timeSpanIndex={timeSpanIndex}
+              measureBasicList={fat}
+            />
+          </View>
           <AtModal isOpened={fatIsOpened} onClose={() => setFatIsOpened(false)}>
             <AtModalContent>
               <AtList>
-                {fat.map((item, index) => {
+                {timeSpanIndex ? fat.map((item, index) => {
+                  return (
+                    <AtListItem
+                      title={`第${index + 1}天`}
+                      extraText={item ? `${item}` : '0'}
+                      key={index}
+                    />
+                  )
+                }) : fat.map((item, index) => {
                   return (
                     <AtListItem
                       title={`星期${getCurrentWeek()[index]}`}
@@ -368,53 +321,37 @@ const Line = () => {
 
           <View className="line-title">
             <Text>血糖</Text>
-            {timeSpanIndex ? null : (
-              <Text
-                onClick={() => {
-                  setSugarIsOpened(true);
-                }}
-              >
-                查看详情 &gt;
+            {/* {timeSpanIndex ? null : ( */}
+            <Text
+              onClick={() => {
+                setSugarIsOpened(true);
+              }}
+            >
+              查看详情 &gt;
               </Text>
-            )}
+            {/* )} */}
           </View>
-          <Chart
-            chartId={'1'}
-            option={{
-              markLine: {
-                data: [{ data: sugarHigh }, { data: sugarLow }],
-              },
-              grid: {
-                left: '50px',
-                right: '50px',
-              },
-              xAxis: {
-                type: 'category',
-                data: timeSpanIndex ? new Array(30).fill('') : getCurrentWeek(),
-                name: timeSpanIndex ? '天' : '星期',
-              },
-              yAxis: {
-                type: 'value',
-                name: 'mmol/L',
-              },
-              series: [
-                {
-                  data: sugar,
-                  type: 'line',
-                  connectNulls: true,
-                },
-              ],
-              animation: false,
-            }}
-          />
-
+          <View style={{ display: uricIsOpened || fatIsOpened || sugarIsOpened ? 'none' : 'block' }}>
+            <SingleLine
+              timeSpanIndex={timeSpanIndex}
+              measureBasicList={sugar}
+            />
+          </View>
           <AtModal
             isOpened={sugarIsOpened}
             onClose={() => setSugarIsOpened(false)}
           >
             <AtModalContent>
               <AtList>
-                {sugar.map((item, index) => {
+                {timeSpanIndex ? sugar.map((item, index) => {
+                  return (
+                    <AtListItem
+                      title={`第${index + 1}天`}
+                      extraText={item ? `${item}` : '0'}
+                      key={index}
+                    />
+                  )
+                }) : sugar.map((item, index) => {
                   return (
                     <AtListItem
                       title={`星期${getCurrentWeek()[index]}`}
