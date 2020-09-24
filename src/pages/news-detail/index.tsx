@@ -10,7 +10,7 @@ import { readNews } from '../../actions/read-news';
 const NewsDetail = () => {
   const newsIndex = Taro.getStorageSync('newsIndex');
   const [getDataLoading, setGetDataLoading] = useState(false);
-  const [articleTitle, setArticleTitle] = useState();
+  // const [articleTitle, setArticleTitle] = useState();
   const [content, setContent] = useState('');
   const dispatch = useDispatch();
 
@@ -33,22 +33,23 @@ const NewsDetail = () => {
         });
       } else if (res.statusCode === 200) {
         dispatch(readNews(true));
-        setArticleTitle(res.data.data.title);
+        // setArticleTitle(res.data.data.title);
         // 这里再请求一下
         const htmlRes = await Taro.request({
           url: res.data.data.content,
           method: 'GET',
         });
 
-        setContent(htmlRes.data)
+        setContent(htmlRes.data);
       }
 
       setGetDataLoading(false);
     })();
   }, []);
 
+
   return (
-    <View>
+    <View className='title'>
       <AtToast
         isOpened={getDataLoading}
         hasMask
@@ -56,8 +57,9 @@ const NewsDetail = () => {
         text="新闻文本加载中..."
       />
       <AtMessage />
-      {articleTitle}
-      <RichText nodes={content} space="emsp" />
+      <View style='padding:30rpx'>
+        <RichText nodes={content} space="emsp" className='news-detail-box' />
+      </View>
     </View>
   );
 };

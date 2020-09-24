@@ -28,9 +28,10 @@ const backwardsDaysInMounth = (backwardsNums: number): string[] => {
 
   backwardsNums--;
 
+  let newStmp;
   while (backwardsNums >= 0) {
-    res.push(`${new Date(nowStmp - backwardsNums * oneDayStmp).getMonth() + 1}.${new Date(
-      nowStmp - backwardsNums * oneDayStmp).getDate()}`);
+    newStmp = new Date(nowStmp - backwardsNums * oneDayStmp);
+    res.push(`${newStmp.getMonth() + 1}.${newStmp.getDate()}`);
     backwardsNums--;
   }
 
@@ -55,7 +56,7 @@ const DataSingleLine = ({
           }}
         >
           查看详情 &gt;
-              </Text>
+        </Text>
         {/* )} */}
       </View>
       <View style={{ display: isVisible ? 'none' : 'block' }}>
@@ -71,9 +72,10 @@ const DataSingleLine = ({
             },
             xAxis: {
               type: 'category',
-              data: timeSpanIndex ? backwardsDaysInMounth(29)
+              data: timeSpanIndex ? backwardsDaysInMounth(30)
                 : getCurrentWeek(),
-              name: timeSpanIndex ? '天' : '星期',
+              name: timeSpanIndex ? '日期' : '星期',
+              axisTick: { alignWithLabel: true },
             },
             yAxis: {
               type: 'value',
