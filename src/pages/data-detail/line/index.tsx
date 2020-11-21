@@ -185,7 +185,6 @@ const Line = () => {
         <View className="line-box" >
           <View className="line-title">
             <Text>尿酸</Text>
-            {/* {timeSpanIndex ? null : ( */}
             <Text
               onClick={() => {
                 setBaseIsOpened(true);
@@ -193,7 +192,6 @@ const Line = () => {
             >
               查看详情 &gt;
               </Text>
-            {/* )} */}
           </View>
           <View style={{ display: baseIsOpened ? 'none' : 'block' }}>
             <SingleLine

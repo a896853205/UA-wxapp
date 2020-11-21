@@ -1,6 +1,13 @@
 import Taro, { memo, useState, useEffect } from '@tarojs/taro';
 import { View, Picker } from '@tarojs/components';
-import { AtInput, AtButton, AtMessage, AtForm, AtToast, AtListItem } from 'taro-ui';
+import {
+  AtInput,
+  AtButton,
+  AtMessage,
+  AtForm,
+  AtToast,
+  AtListItem,
+} from 'taro-ui';
 
 import { ME, ME_UPDATE } from '../../constants/api-constants';
 import TaroRegionPicker from '../../util/taro-region-picker';
@@ -17,6 +24,8 @@ const AddPatient = () => {
   const [relativeName, setRelativeName] = useState('');
   const [relativeRelation, setRelativeRelation] = useState('');
   const [relativePhone, setRelativePhone] = useState('');
+  const [historyHypertension, setHistoryHypertension] = useState(0);
+  const [historyDiabetes, setHistoryDiabetes] = useState(0);
   const [gender, setGender] = useState(0);
 
   const [region, setRegion] = useState('');
@@ -45,11 +54,13 @@ const AddPatient = () => {
         setRelativeName(res.data.data.relative_name);
         setRelativeRelation(res.data.data.relative_relation);
         setRelativePhone(res.data.data.relative_phone);
+        setHistoryHypertension(res.data.data.history_hypertension);
+        setHistoryDiabetes(res.data.data.history_diabetes);
         if (res.data.data.province) {
           setRegion(
             `${res.data.data.province} - ${res.data.data.city} - ${res.data.data.district}`
           );
-        };
+        }
       }
 
       setGetDataLoading(false);
@@ -69,6 +80,8 @@ const AddPatient = () => {
         relative_name: relativeName,
         relative_relation: relativeRelation,
         relative_phone: relativePhone,
+        history_hypertension: historyHypertension,
+        history_diabetes: historyDiabetes,
         district,
         city,
         province,
@@ -106,7 +119,7 @@ const AddPatient = () => {
   // relative_phone
 
   return (
-    <View className='me-update'>
+    <View className="me-update">
       <AtToast
         isOpened={getDataLoading}
         hasMask
@@ -157,7 +170,6 @@ const AddPatient = () => {
           }}
         />
         <AtInput
-          required
           name="identity"
           title="身份证号"
           type="text"
@@ -207,6 +219,42 @@ const AddPatient = () => {
             setRelativePhone(`${e}`);
           }}
         />
+        <Picker
+          mode="selector"
+          range={['否', '是']}
+          onChange={(e) => {
+            setHistoryHypertension(+e.detail.value);
+          }}
+          value={historyHypertension}
+        >
+          <View className="patient-gender-box">
+            <View className="gender-right-box">
+              <AtListItem
+                title="高血压病史"
+                extraText={['否', '是'][historyHypertension]}
+                arrow="right"
+              />
+            </View>
+          </View>
+        </Picker>
+        <Picker
+          mode="selector"
+          range={['否', '是']}
+          onChange={(e) => {
+            setHistoryDiabetes(+e.detail.value);
+          }}
+          value={historyDiabetes}
+        >
+          <View className="patient-gender-box">
+            <View className="gender-right-box">
+              <AtListItem
+                title="糖尿病病史"
+                extraText={['否', '是'][historyDiabetes]}
+                arrow="right"
+              />
+            </View>
+          </View>
+        </Picker>
         <TaroRegionPicker
           style={{ textAlign: 'left', borderTop: 0 }}
           regionSelf={region}

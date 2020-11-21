@@ -77,7 +77,6 @@ const Register = () => {
           type="idcard"
           placeholder="患者本人身份证号码"
           value={idNumber}
-          required
           onChange={(e) => {
             setIdNumber(`${e}`);
           }}
