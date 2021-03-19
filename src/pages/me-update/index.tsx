@@ -20,7 +20,7 @@ const AddPatient = () => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [identify, setIdentify] = useState('');
-  const [address, setAddress] = useState('');
+  // const [address, setAddress] = useState('');
   const [relativeName, setRelativeName] = useState('');
   const [relativeRelation, setRelativeRelation] = useState('');
   const [relativePhone, setRelativePhone] = useState('');
@@ -50,7 +50,7 @@ const AddPatient = () => {
         setGender(res.data.data.gender);
         setPhone(res.data.data.phone);
         setIdentify(res.data.data.identify);
-        setAddress(res.data.data.address);
+        // setAddress(res.data.data.address);
         setRelativeName(res.data.data.relative_name);
         setRelativeRelation(res.data.data.relative_relation);
         setRelativePhone(res.data.data.relative_phone);
@@ -60,6 +60,9 @@ const AddPatient = () => {
           setRegion(
             `${res.data.data.province} - ${res.data.data.city} - ${res.data.data.district}`
           );
+          setDistrict(res.data.data.district);
+          setCity(res.data.data.city);
+          setProvince(res.data.data.province);
         }
       }
 
@@ -76,7 +79,7 @@ const AddPatient = () => {
         gender: gender,
         identify: identify,
         phone: phone,
-        address: address,
+        // address: address,
         relative_name: relativeName,
         relative_relation: relativeRelation,
         relative_phone: relativePhone,
@@ -102,7 +105,7 @@ const AddPatient = () => {
         });
       } else if (res.statusCode === 200) {
         Taro.reLaunch({
-          url: '../../pages/index/index?cur=2',
+          url: '../../pages/index/index?cur=1',
         });
       }
 
@@ -179,7 +182,7 @@ const AddPatient = () => {
             setIdentify(`${e}`);
           }}
         />
-        <AtInput
+        {/* <AtInput
           name="address"
           title="家庭住址"
           type="text"
@@ -188,7 +191,7 @@ const AddPatient = () => {
           onChange={(e) => {
             setAddress(`${e}`);
           }}
-        />
+        /> */}
         <AtInput
           name="address"
           title="亲属姓名"

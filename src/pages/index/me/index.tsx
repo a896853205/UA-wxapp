@@ -78,7 +78,7 @@ const Me = () => {
           <View className="me-describe">
             <Text>{me.name}</Text>
             <Text className="me-position">
-              {me.address ? me.address : '未填写地址'}
+              {me.province ? `${me.province}-${me.city}-${me.district}` : '未填写地址'}
             </Text>
           </View>
         </View>

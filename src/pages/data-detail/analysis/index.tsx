@@ -131,11 +131,11 @@ const Analysis = () => {
                       // 数据项的名称
                       name: '偏高',
                       // 数据项值8
-                      value: singleSugar.high_times,
+                      value: !singleSugar.high_times && singleSugar.normal_times ? null : singleSugar.high_times,
                     },
                     {
                       name: '正常',
-                      value: singleSugar.normal_times,
+                      value: !singleSugar.normal_times && singleSugar.high_times ? null : singleSugar.normal_times,
                     },
                   ],
                   type: 'pie',
@@ -199,11 +199,11 @@ const Analysis = () => {
                       // 数据项的名称
                       name: '偏高',
                       // 数据项值8
-                      value: uric.high_times,
+                      value: !uric.high_times && uric.normal_times ? null : uric.high_times,
                     },
                     {
                       name: '正常',
-                      value: uric.normal_times,
+                      value: !uric.normal_times && uric.high_times ? null : uric.normal_times,
                     },
                   ],
                   type: 'pie',
@@ -263,11 +263,11 @@ const Analysis = () => {
                       // 数据项的名称
                       name: '偏高',
                       // 数据项值8
-                      value: fat.high_times,
+                      value: !fat.high_times && fat.normal_times ? null : fat.high_times,
                     },
                     {
                       name: '正常',
-                      value: fat.normal_times,
+                      value: !fat.normal_times && fat.high_times ? null : fat.normal_times,
                     },
                   ],
                   type: 'pie',
@@ -327,11 +327,11 @@ const Analysis = () => {
                       // 数据项的名称
                       name: '偏高',
                       // 数据项值8
-                      value: sugar.high_times,
+                      value: !sugar.high_times && sugar.normal_times ? null : sugar.high_times,
                     },
                     {
                       name: '正常',
-                      value: sugar.normal_times,
+                      value: !sugar.normal_times && sugar.high_times ? null : sugar.normal_times,
                     },
                   ],
                   type: 'pie',

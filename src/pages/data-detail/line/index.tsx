@@ -45,6 +45,15 @@ const getCurrentWeek = () => {
   return [...week, ...spli];
 };
 
+let getPreDate = (index) => {
+  // 获取当前时间
+  let curDate = new Date();
+  let preDate = new Date(curDate.getTime() - index * 24 * 60 * 60 * 1000);
+  let preMonth = preDate.getMonth() + 1;
+  let preDay = preDate.getDate();
+  return `${preMonth}月${preDay}日`;
+}
+
 const Line = () => {
   const [timeSpanIndex, setTimeSpanIndex] = useState(0);
   const [measureBasicList, setMeasureBasicList] = useState<any>([]);
@@ -197,6 +206,7 @@ const Line = () => {
             <SingleLine
               timeSpanIndex={timeSpanIndex}
               measureBasicList={measureBasicList}
+              unit={'μmol/L'}
             />
           </View>
         </View>
@@ -208,8 +218,9 @@ const Line = () => {
             {timeSpanIndex ? measureBasicList.map((item, index) => {
               return (
                 <AtListItem
-                  title={`第${index + 1}天`}
-                  extraText={item ? `${item}` : '0'}
+                  // title={`第${index + 1}天`}
+                  title={getPreDate(29 - index)}
+                  extraText={item ? `${item} μmol/L` : '0 μmol/L'}
                   key={index}
                 />
               )
@@ -218,7 +229,7 @@ const Line = () => {
                 return (
                   <AtListItem
                     title={`星期${getCurrentWeek()[index]}`}
-                    extraText={item ? `${item}` : '0'}
+                    extraText={item ? `${item} μmol/L` : '0 μmol/L'}
                     key={index}
                   />
                 );
@@ -245,6 +256,7 @@ const Line = () => {
             <SingleLine
               timeSpanIndex={timeSpanIndex}
               measureBasicList={uric}
+              unit={'μmol/L'}
             />
           </View>
           <AtModal
@@ -256,8 +268,9 @@ const Line = () => {
                 {timeSpanIndex ? uric.map((item, index) => {
                   return (
                     <AtListItem
-                      title={`第${index + 1}天`}
-                      extraText={item ? `${item}` : '0'}
+                      // title={`第${index + 1}天`}
+                      title={getPreDate(29 - index)}
+                      extraText={item ? `${item} μmol/L` : '0 μmol/L'}
                       key={index}
                     />
                   )
@@ -266,7 +279,7 @@ const Line = () => {
                     return (
                       <AtListItem
                         title={`星期${getCurrentWeek()[index]}`}
-                        extraText={item ? `${item}` : '0'}
+                        extraText={item ? `${item} μmol/L` : '0 μmol/L'}
                         key={index}
                       />
                     );
@@ -291,6 +304,7 @@ const Line = () => {
             <SingleLine
               timeSpanIndex={timeSpanIndex}
               measureBasicList={fat}
+              unit={'mmol/L'}
             />
           </View>
           <AtModal isOpened={fatIsOpened} onClose={() => setFatIsOpened(false)}>
@@ -299,8 +313,9 @@ const Line = () => {
                 {timeSpanIndex ? fat.map((item, index) => {
                   return (
                     <AtListItem
-                      title={`第${index + 1}天`}
-                      extraText={item ? `${item}` : '0'}
+                      // title={`第${index + 1}天`}
+                      title={getPreDate(29 - index)}
+                      extraText={item ? `${item} mmol/L` : '0 mmol/L'}
                       key={index}
                     />
                   )
@@ -308,7 +323,7 @@ const Line = () => {
                   return (
                     <AtListItem
                       title={`星期${getCurrentWeek()[index]}`}
-                      extraText={item ? `${item}` : '0'}
+                      extraText={item ? `${item} mmol/L` : '0 mmol/L'}
                       key={index}
                     />
                   );
@@ -333,6 +348,7 @@ const Line = () => {
             <SingleLine
               timeSpanIndex={timeSpanIndex}
               measureBasicList={sugar}
+              unit={'mmol/L'}
             />
           </View>
           <AtModal
@@ -344,8 +360,9 @@ const Line = () => {
                 {timeSpanIndex ? sugar.map((item, index) => {
                   return (
                     <AtListItem
-                      title={`第${index + 1}天`}
-                      extraText={item ? `${item}` : '0'}
+                      // title={`第${index + 1}天`}
+                      title={getPreDate(29 - index)}
+                      extraText={item ? `${item} mmol/L` : '0 mmol/L'}
                       key={index}
                     />
                   )
@@ -353,7 +370,7 @@ const Line = () => {
                   return (
                     <AtListItem
                       title={`星期${getCurrentWeek()[index]}`}
-                      extraText={item ? `${item}` : '0'}
+                      extraText={item ? `${item} mmol/L` : '0 mmol/L'}
                       key={index}
                     />
                   );

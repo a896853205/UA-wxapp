@@ -5,6 +5,7 @@ import Chart from 'taro-echarts';
 interface Props {
   timeSpanIndex: number;
   measureBasicList: any[];
+  unit: string;
 }
 
 const getCurrentWeek = () => {
@@ -16,9 +17,25 @@ const getCurrentWeek = () => {
   return [...week, ...spli];
 };
 
+let getPreMonthDate = () => {
+  // 获取当前时间
+  let curDate = new Date();
+  let dateArray: Array<string> = [];
+
+  for (let i = 29; i >= 0; i--) {
+    let preDate = new Date(curDate.getTime() - i * 24 * 60 * 60 * 1000);
+    let preMonth = preDate.getMonth() + 1;
+    let preDay = preDate.getDate();
+    let preDateStr = `${preMonth}.${preDay}`;
+    dateArray.push(preDateStr);
+  }
+  return dateArray;
+}
+
 const DataSingleLine = ({
   timeSpanIndex,
-  measureBasicList
+  measureBasicList,
+  unit
 }: Props) => {
   return (
     <Chart
@@ -33,14 +50,12 @@ const DataSingleLine = ({
         },
         xAxis: {
           type: 'category',
-          data: timeSpanIndex ?
-            ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30']
-            : getCurrentWeek(),
+          data: timeSpanIndex ? getPreMonthDate() : getCurrentWeek(),
           name: timeSpanIndex ? '天' : '星期',
         },
         yAxis: {
           type: 'value',
-          name: 'μmol/L',
+          name: unit,
         },
         series: [
           {
