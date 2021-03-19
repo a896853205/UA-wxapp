@@ -24,9 +24,9 @@ const AddPatient = () => {
   const [relativeName, setRelativeName] = useState('');
   const [relativeRelation, setRelativeRelation] = useState('');
   const [relativePhone, setRelativePhone] = useState('');
-  const [historyHypertension, setHistoryHypertension] = useState(0);
-  const [historyDiabetes, setHistoryDiabetes] = useState(0);
-  const [gender, setGender] = useState(0);
+  const [historyHypertension, setHistoryHypertension] = useState(null);
+  const [historyDiabetes, setHistoryDiabetes] = useState(null);
+  const [gender, setGender] = useState(null);
 
   const [region, setRegion] = useState('');
   const [district, setDistrict] = useState('');
@@ -227,8 +227,9 @@ const AddPatient = () => {
           }}
           value={historyHypertension}
         >
-          <View className="patient-gender-box">
-            <View className="gender-right-box">
+          <View className="gender-select-box">
+            <View className="list-left-box">*</View>
+            <View className="list-right-box">
               <AtListItem
                 title="高血压病史"
                 extraText={['否', '是'][historyHypertension]}
@@ -245,8 +246,9 @@ const AddPatient = () => {
           }}
           value={historyDiabetes}
         >
-          <View className="patient-gender-box">
-            <View className="gender-right-box">
+          <View className="gender-select-box">
+            <View className="list-left-box">*</View>
+            <View className="list-right-box">
               <AtListItem
                 title="糖尿病病史"
                 extraText={['否', '是'][historyDiabetes]}

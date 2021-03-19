@@ -41,15 +41,15 @@ const Index = () => {
     <View>
       <View className="page">
         {tabCur === 0 ? <Measure /> : null}
-        {tabCur === 1 ? <Recommend /> : null}
-        {tabCur === 2 ? <Me /> : null}
+        {/* {tabCur === 1 ? <Recommend /> : null} */}
+        {tabCur === 1 ? <Me /> : null}
       </View>
       <AtTabBar
         className="tab-bar"
         backgroundColor="rgb(250,250,250)"
         tabList={[
           { title: '测量', iconType: 'equalizer' },
-          { title: '发现', iconType: 'streaming' },
+          // { title: '发现', iconType: 'streaming' },
           { title: '我的', iconType: 'user' },
         ]}
         onClick={(e) => {
