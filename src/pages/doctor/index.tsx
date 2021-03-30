@@ -25,7 +25,7 @@ interface Istatus {
   doctor: Idoctor;
 }
 
-const DOCTOR_LIST_SIZE = 10;
+const DOCTOR_LIST_SIZE = 999;
 
 const Doctor = () => {
   /**
@@ -90,7 +90,7 @@ const Doctor = () => {
     (async () => {
       if (isNeedRefresh) {
         setActiveDoctorLoading(true);
-        
+
         const res = await http({
           url: DOCTOR_ACTIVE,
           method: 'GET',
@@ -173,7 +173,7 @@ const Doctor = () => {
                 }}
               />
             </AtList>
-          ) : null}
+          ) : <div>无</div>}
         </AtCard>
       </View>
       <AtList>

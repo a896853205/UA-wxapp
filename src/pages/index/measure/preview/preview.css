@@ -18,7 +18,7 @@
 .measure-green {
   color: rgb(147, 206, 84);
 }
-.measure-bule {
+.measure-blue {
   color: #6190e8;
 }
 
@@ -53,7 +53,7 @@
 }
 
 .value-num {
-  color: rgb(255, 107, 132);
+  /* color: rgb(255, 107, 132); */
   font-size: 3rem;
 }
 .measure-unit {
