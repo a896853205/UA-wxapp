@@ -1,5 +1,5 @@
 import Taro, { memo, useEffect, useState } from '@tarojs/taro';
-import { View } from '@tarojs/components';
+import { View, Picker } from '@tarojs/components';
 import { useSelector, useDispatch } from '@tarojs/redux';
 import {
   AtList,
@@ -16,7 +16,8 @@ import './doctor.css';
 import selected from '../../assets/icon/selected.png';
 
 import http from '../../util/http';
-import { DOCTOR_LIST, DOCTOR_ACTIVE } from '../../constants/api-constants';
+import { DOCTOR_LIST, DOCTOR_ACTIVE, HOSPITAL_SEARCH } from '../../constants/api-constants';
+import TaroTwoLevelRegionPicker from '../../util/taro-twolevel-region-picker';
 
 interface Idoctor {
   isChanged: boolean;
@@ -26,6 +27,7 @@ interface Istatus {
 }
 
 const DOCTOR_LIST_SIZE = 999;
+const HOSPITAL_LIST_SIZE = 999;
 
 const Doctor = () => {
   /**
@@ -43,6 +45,10 @@ const Doctor = () => {
   const [getDataLoading, setGetDataLoading] = useState(true);
   const [isNeedRefresh, setIsNeedRefresh] = useState(true);
   const [doctorName, setDoctorName] = useState('');
+  const [city, setCity] = useState('');
+  const [province, setProvince] = useState('');
+  const [hospital, setHospital] = useState('');
+  const [hospitalList, setHospitalList] = useState<any>([]);
   const [isSearch, setIsSearch] = useState(true);
   const dispatch = useDispatch();
 
@@ -57,6 +63,12 @@ const Doctor = () => {
             page: 0,
             limit: DOCTOR_LIST_SIZE,
             like: doctorName,
+          };
+        } else if (hospital && hospital != '未选择医院') {
+          data = {
+            page: 0,
+            hospital: hospital,
+            limit: HOSPITAL_LIST_SIZE,
           };
         } else {
           data = {
@@ -85,6 +97,37 @@ const Doctor = () => {
       }
     })();
   }, [isSearch]);
+
+  useEffect(() => {
+    (async () => {
+      if (city) {
+        let data;
+        data = {
+          page: 0,
+          limit: HOSPITAL_LIST_SIZE,
+          city: city,
+          province: province,
+        };
+
+        const res = await http({
+          url: HOSPITAL_SEARCH,
+          method: 'GET',
+          data,
+        });
+
+        if (res.statusCode === 500) {
+          Taro.atMessage({
+            message: '获取列表失败',
+            type: 'error',
+          });
+        } else if (res.statusCode === 200) {
+          setHospitalList(res.data.data.rows.map((item)=>{
+              return item.hospital
+          }));     
+        }
+      }
+    })();
+  }, [city]);
 
   useEffect(() => {
     (async () => {
@@ -144,8 +187,10 @@ const Doctor = () => {
           value={doctorName}
           onChange={(e) => {
             setDoctorName(e);
+            setHospital('未选择医院');
           }}
           onActionClick={() => {
+            setHospital('未选择医院')
             setIsSearch(true);
           }}
           onClear={() => {
@@ -162,7 +207,7 @@ const Doctor = () => {
                 key={activeDoctor.uuid}
                 title={activeDoctor.name}
                 arrow="right"
-                note={`电话: ${activeDoctor.phone}`}
+                note={activeDoctor.hospital}
                 thumb={activeDoctor.avartar}
                 extraText="查看详情"
                 onClick={() => {
@@ -176,13 +221,51 @@ const Doctor = () => {
           ) : <div>无</div>}
         </AtCard>
       </View>
+      <View className="region-hospital-box">
+        <AtCard title="按医院搜索">
+          <TaroTwoLevelRegionPicker
+            style={{ textAlign: 'left', borderTop: 0 }}
+            // regionSelf={region}
+            onGetRegion={(_region) => {
+              const re = _region.split(' - ');
+              setCity(re[1]);
+              setProvince(re[0]);
+              setHospital('未选择医院');
+              console.log(re);
+            }}
+          />
+          <AtList>
+            <Picker
+              mode="selector"
+              range={hospitalList}
+              onChange={(e) => {
+                if (hospitalList.length) {
+                  setHospital(hospitalList[+e.detail.value]);
+                  setDoctorName('');
+                  // setDoctorName('');
+                  setIsSearch(true);
+                }
+              }}
+              value={hospital.length ? hospital : '未选择医院'}
+            >
+              <View style='padding: 30rpx 0 0 0'>
+                <AtListItem
+                  title="选择医院："
+                  extraText={hospital}
+                  arrow="right"
+                />
+              </View>
+            </Picker>
+          </AtList>
+        </AtCard>
+      </View>
       <AtList>
         {doctorList.map((doctorItem) => (
           <AtListItem
             key={doctorItem.uuid}
             title={doctorItem.name}
             arrow="right"
-            note={`电话: ${doctorItem.phone}`}
+            note={doctorItem.hospital}
             thumb={doctorItem.avartar}
             extraText="查看详情"
             onClick={() => {

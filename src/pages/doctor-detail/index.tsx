@@ -27,10 +27,11 @@ const Me = () => {
    */
 
   const [headPortrait, setHeadPortrait] = useState('');
-  const [totalPatientNumber, setTotalPatientNumber] = useState('');
+  const [hospital, setHospital] = useState('');
   const [name, setName] = useState('');
   const [skill, setSkill] = useState('');
   const [intro, setIntro] = useState('');
+  const [phone, setPhone] = useState('');
   const [selected, setSelected] = useState(false);
   const [getDataLoading, setGetDataLoading] = useState(false);
   const doctorUuid = Taro.getStorageSync('viewDoctor');
@@ -56,10 +57,11 @@ const Me = () => {
           });
         } else if (res.statusCode === 200) {
           setHeadPortrait(res.data.data.avartar);
-          setTotalPatientNumber(res.data.data.total_patient_number);
+          setHospital(res.data.data.hospital);
           setName(res.data.data.name);
           setSkill(res.data.data.skill);
           setIntro(res.data.data.intro);
+          setPhone(res.data.data.phone);
           setSelected(res.data.data.selected);
         }
 
@@ -118,7 +120,7 @@ const Me = () => {
           />
           <View className="me-describe">
             <Text>{name}</Text>
-            <Text className="me-position">{`累计服务人数: ${totalPatientNumber}`}</Text>
+            <Text className="me-position">{hospital ? hospital : ''}</Text>
           </View>
         </View>
         <View className="me-item">
@@ -128,6 +130,10 @@ const Me = () => {
         <View className="me-item">
           <View className="item-title">擅长方向</View>
           <View className="item-name">{skill}</View>
+        </View>
+        <View className="me-item">
+          <View className="item-title">手机号码</View>
+          <View className="item-name">{phone}</View>
         </View>
         {selected ? null : (
           <View className="me-item">
